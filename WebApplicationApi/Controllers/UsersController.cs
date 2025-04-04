@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 using WebApplicationApi.Authentication;
+using WebApplicationApi.Enums;
 using WebApplicationApi.Models.DataModels;
 using WebApplicationApi.Models.Dtos.User;
 using WebApplicationApi.Repositories.Interfaces;
@@ -9,6 +11,7 @@ namespace WebApplicationApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(Roles = $"{nameof(Role.Customer)},{nameof(Role.Admin)}")]
 [ServiceFilter(typeof(ApiKeyAuthFilter))]
 public class UsersController : ControllerBase
 {

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 using WebApplicationApi.Authentication;
+using WebApplicationApi.Enums;
 using WebApplicationApi.Models.DataModels;
 using WebApplicationApi.Models.Dtos.Product;
 using WebApplicationApi.Repositories.Interfaces;
@@ -20,6 +22,7 @@ namespace WebApplicationApi.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{nameof(Role.Customer)},{nameof(Role.Manager)}")]
         public async Task<ActionResult<IEnumerable<ProductModel>>> GetProducts()
         {
             var products = await _repository.GetAllAsync();
@@ -27,6 +30,7 @@ namespace WebApplicationApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = $"{nameof(Role.Customer)},{nameof(Role.Manager)}")]
         public async Task<ActionResult<ProductModel>> GetProduct(int id)
         {
             var product = await _repository.GetByIdAsync(id);
@@ -40,6 +44,7 @@ namespace WebApplicationApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = nameof(Role.Manager))]
         public async Task<ActionResult<ProductModel>> CreateProduct(ProductDto productDto)
         {
             var newProduct = new ProductModel()
@@ -57,6 +62,7 @@ namespace WebApplicationApi.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = nameof(Role.Manager))]
         public async Task<IActionResult> UpdateProduct(int id, ProductDto productDto)
         {
             var updatedProduct = new ProductModel
@@ -79,7 +85,7 @@ namespace WebApplicationApi.Controllers
         }
 
         [HttpDelete("{id}")]
-       // [Authorize(Roles = nameof(Role.Manager))]
+        [Authorize(Roles = nameof(Role.Manager))]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var deleted = await _repository.DeleteAsync(id);

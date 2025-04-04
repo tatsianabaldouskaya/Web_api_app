@@ -1,25 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.IdentityModel.Tokens;
 
 namespace WebApplicationApi.Authentication;
 
 public class ApiKeyAuthFilter : Attribute, IAuthorizationFilter
 {
-    private readonly IConfiguration _config;
-
-    public ApiKeyAuthFilter(IConfiguration config)
-    {
-        _config = config;
-    }
-
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        if (!context.HttpContext.Request.Headers.TryGetValue(AuthConstants.ApiKeyHeaderName, out var extractedApiKey))
+        if (!context.HttpContext.Request.Headers.TryGetValue(Config.ApiKeyHeader, out var extractedApiKey))
         {
             context.Result = new UnauthorizedObjectResult("API Key is missing");
         }
 
-        var apiKey = _config.GetValue<string>(AuthConstants.ApiKeySectionName);
+        var apiKey = Config.ApiKey;
+
+        if (apiKey.IsNullOrEmpty())
+        {
+            context.Result = new UnauthorizedObjectResult("Api key is missing in configuration");
+        }
 
         if (!apiKey.Equals(extractedApiKey))
         {

@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
 using WebApplicationApi.Authentication;
-using WebApplicationApi.Data;
+using WebApplicationApi.Enums;
 using WebApplicationApi.Models.DataModels;
 using WebApplicationApi.Models.Dtos.Booking;
-using WebApplicationApi.Repositories;
 using WebApplicationApi.Repositories.Interfaces;
 
 namespace WebApplicationApi.Controllers
@@ -22,6 +22,7 @@ namespace WebApplicationApi.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{nameof(Role.Customer)},{nameof(Role.Manager)}")]
         public async Task<ActionResult<IEnumerable<BookingModel>>> GetBookings()
         {
             var bookings = await _repository.GetAllAsync();
@@ -29,6 +30,7 @@ namespace WebApplicationApi.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = $"{nameof(Role.Customer)},{nameof(Role.Manager)}")]
         public async Task<ActionResult<BookingModel>> GetBooking(int id)
         {
             var bookingModel = await _repository.GetByIdAsync(id);
@@ -42,6 +44,7 @@ namespace WebApplicationApi.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = $"{nameof(Role.Customer)},{nameof(Role.Manager)}")]
         public async Task<ActionResult> UpdateBooking(int id, BookingDto bookingDto)
         {
             var booking = new BookingModel()
@@ -62,6 +65,7 @@ namespace WebApplicationApi.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{nameof(Role.Customer)},{nameof(Role.Manager)}")]
         public async Task<ActionResult<BookingModel>> CreateBooking(BookingDto bookingDto)
         {
             var booking = new BookingModel()
@@ -81,6 +85,7 @@ namespace WebApplicationApi.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = $"{nameof(Role.Customer)},{nameof(Role.Manager)}")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
             var isDeleted = await _repository.DeleteAsync(id);

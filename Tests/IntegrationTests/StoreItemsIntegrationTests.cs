@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 using WebApplicationApi;
+using WebApplicationApi.Authorization;
 using WebApplicationApi.Data;
 using WebApplicationApi.Models.DataModels;
 using WebApplicationApi.Models.Dtos.StoreItem;
@@ -25,7 +26,9 @@ public class StoreItemsIntegrationTests
     {
         _factory = new CustomWebAppFactory();
         _client = _factory.CreateClient();
+        var token = new TokenGenerator().GenerateSuperUserJwtToken();
         _client.DefaultRequestHeaders.Add(Config.ApiKeyHeader, Config.ApiKey);
+        _client.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
 
         var scope = _factory.Services.CreateScope();
         _dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
