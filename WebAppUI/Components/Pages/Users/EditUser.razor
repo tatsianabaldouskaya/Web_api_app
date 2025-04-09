@@ -1,0 +1,73 @@
+﻿@page "/Users/Edit/{Id:int}"
+@inject UserService UserService
+@using WebApplicationApi.Models.DataModels
+@using WebApplicationApi.Models.Dtos.User
+@using WebApplicationApi.Enums
+@using WebAppUI.Services
+<h3>Edit User</h3>
+
+
+@if (user == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <EditForm Model="user" OnValidSubmit = "SaveUser">
+        <div class="mb-3">
+            <label for="nameInput" class="form-label">Name</label>
+            <InputText id="nameInput" class="form-control" @bind-Value="user.Name" />
+        </div>
+        <div class="mb-3">
+            <label for="emailInput" class="form-label">Email</label>
+            <InputText id="emailInput" class="form-control" @bind-Value="user.Email" />
+        </div>
+        <div class="mb-3">
+            <label for="roleSelect" class="form-label">Role</label>
+            <InputNumber id="roleSelect" class="form-control" @bind-Value="user.RoleId">
+            </InputNumber>
+        </div>
+        <div class="mb-3">
+            <label for="emailInput" class="form-label">Phone Number</label>
+            <InputText id="emailInput" class="form-control" @bind-Value="user.Phone" />
+        </div>
+        <div class="mb-3">
+            <label for="emailInput" class="form-label">Address</label>
+            <InputText id="emailInput" class="form-control" @bind-Value="user.Address" />
+        </div>
+        <div class="mb-3">
+            <label for="emailInput" class="form-label">Login</label>
+            <InputText id="emailInput" class="form-control" @bind-Value="user.Password" />
+        </div>
+        <button type="submit" class="btn btn-primary" @onclick="SaveUser">Save</button>
+    </EditForm>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public UserModel user = null;
+
+    public UserDto UserData { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        user = await UserService.GetUserByIdAsync(Id);
+        UserData = new UserDto()
+        {
+            Name = user.Name,
+            Address = user.Address,
+            Email = user.Email,
+            Login = user.Login,
+            Password = user.Password,
+            Phone = user.Phone,
+            Role = (Role)user.RoleId
+        };
+    }
+
+    protected async Task SaveUser()
+    {
+        var response = await UserService.EditUserAsync(Id, UserData);
+    }
+}

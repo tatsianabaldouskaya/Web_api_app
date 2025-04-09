@@ -1,0 +1,51 @@
+﻿@page "/Users"
+@using WebApplicationApi.Models.DataModels
+@using WebAppUI.Services
+
+@if (_users == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-bordered align-middle">
+            <caption class="text-start fs-5 fw-bold">Search Results</caption>
+            <thead class="table-light">
+            <tr>
+                <th>User Id</th>
+                <th>User Name</th>
+                <th>Login</th>
+                <th>Email</th>
+                <th>Address</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var user in _users)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.Name</td>
+                    <td>@user.Login</td>
+                    <td>@user.Email</td>
+                    <td>@user.Address</td>
+                    <td style="white-space: nowrap">
+                        <a class="btn btn-primary btn-sm" href="/Users/Edit/@user.Id">Edit</a>
+                        <a class="btn-danger btn-sm" href="/Users/Delete/@user.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <button class="btn btn-success btn-sm">Create</button>
+}
+@inject UserService UserService
+@code {
+    private List<UserModel> _users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _users = await UserService.GetUsersAsync();
+    }
+}
