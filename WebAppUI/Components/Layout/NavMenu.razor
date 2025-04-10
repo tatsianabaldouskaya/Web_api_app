@@ -1,4 +1,9 @@
-﻿<nav class="navbar navbar-expand-lg bg-body-tertiary">
+﻿@using WebAppUI.Services
+@using WebApplicationApi.Enums
+@using Microsoft.CodeAnalysis.CSharp.Syntax
+@inject AuthService AuthService
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">Bookshop</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -6,10 +11,26 @@
         </button>
         <div class="navbar" id="navbarNavAltMarkup">
             <div class="navbar-nav">
-                <a class="nav-link" href="/Products">Catalogue</a>
-                <a class="nav-link" href="/Users">Users</a>
-                <a class="nav-link" href="/Bookings">Bookings</a>
-                <a class="nav-link" href="/Login">Login</a>
+                @if (AuthService.CurrentRole == Role.Manager || AuthService.CurrentRole == Role.Customer)
+                {
+                    <a class="nav-link" href="/Products">Catalogue</a>
+                }
+                @if (AuthService.CurrentRole == Role.Admin)
+                {
+                    <a class="nav-link" href="/Users">Users</a>
+                }
+                @if (AuthService.CurrentRole == Role.Manager || AuthService.CurrentRole == Role.Customer)
+                {
+                    <a class="nav-link" href="/Bookings">Bookings</a>
+                }
+                @if (AuthService.CurrentRole == null)
+                {
+                    <a class="nav-link" href="/Login">Login</a>
+                }
+                else
+                {
+                    <a class="nav-link" href="/Login">Log out</a>
+                }
             </div>
         </div>
         <form class="d-flex" role="search">
@@ -18,4 +39,3 @@
         </form>
     </div>
 </nav>
-

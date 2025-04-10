@@ -27,7 +27,7 @@
     </div>
 </EditForm>
 
-@inject LoginService LoginService;
+@inject AuthService AuthService;
 @code {
 
    [SupplyParameterFromForm]
@@ -37,18 +37,11 @@
 
     public async Task Authenticate()
     {
-        role = (loginDto.Username, loginDto.Password) switch
-        {
-            ("admin", "admin") => Role.Admin,
-            ("customer", "customer") => Role.Customer,
-            ("manager", "manager") => Role.Manager,
-            _ => null
-            };
-        NavigationManager.NavigateTo("/", true);
+        var data = loginDto;
+        AuthService.Login(loginDto);
 
-        if (role !=null)
-        {
-            NavigationManager.NavigateTo("/", true);
-        }
+        await Task.Delay(100);
+
+        NavigationManager.NavigateTo("/");
     }
 }

@@ -13,7 +13,7 @@ builder.Services.AddHttpClient("ApiClient", client =>
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<BookingService>();
-builder.Services.AddScoped<LoginService>();
+builder.Services.AddSingleton<AuthService>();
 builder.Services.AddScoped<ProtectedSessionStorage>();
 
 builder.Services.AddRazorComponents()
