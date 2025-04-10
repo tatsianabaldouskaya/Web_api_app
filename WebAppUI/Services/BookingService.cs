@@ -4,16 +4,10 @@ using WebApplicationApi.Models.Dtos.Booking;
 
 namespace WebAppUI.Services;
 
-public class BookingService
+public class BookingService : BaseService
 {
-    private readonly HttpClient _httpClient;
-
-    public BookingService(HttpClient httpClient)
+    public BookingService(IHttpClientFactory httpClient) : base(httpClient)
     {
-        _httpClient = httpClient;
-        var token = new TokenGenerator().GenerateSuperUserJwtToken();
-        _httpClient.DefaultRequestHeaders.Add(Config.ApiKeyHeader, Config.ApiKey);
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
     }
     public async Task<List<BookingModel>> GetBookingsAsync()
     {

@@ -2,6 +2,14 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+.navbar-nav {
+    justify-content: flex-start; /* Align links to the left */
+}
+
+.navbar-brand {
+    margin-right: auto; /* Pushes the brand link to the left */
+}
+
 a, .btn-link {
     color: #006bb7;
 }

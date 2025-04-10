@@ -4,16 +4,10 @@ using WebApplicationApi.Models.Dtos.Product;
 
 namespace WebAppUI.Services;
 
-public class ProductService
+public class ProductService : BaseService
 {
-    private readonly HttpClient _httpClient;
-
-    public ProductService(HttpClient httpClient)
+    public ProductService(IHttpClientFactory httpClient) : base(httpClient)
     {
-        _httpClient = httpClient;
-        var token = new TokenGenerator().GenerateSuperUserJwtToken();
-        _httpClient.DefaultRequestHeaders.Add(Config.ApiKeyHeader, Config.ApiKey);
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
     }
 
     public async Task<List<ProductModel>> GetProductsAsync()
@@ -21,7 +15,7 @@ public class ProductService
         return await _httpClient.GetFromJsonAsync<List<ProductModel>>("api/Products");
     }
 
-    public async Task<ProductModel?> GetProductByIdAsync(int id)
+    public async Task<ProductModel> GetProductByIdAsync(int id)
     {
         return await _httpClient.GetFromJsonAsync<ProductModel>($"api/Products/{id}");
     }

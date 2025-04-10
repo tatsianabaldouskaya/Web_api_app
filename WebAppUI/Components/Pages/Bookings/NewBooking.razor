@@ -1,0 +1,102 @@
+﻿@page "/Bookings/Add/{Id:int}"
+
+@using WebAppUI.Services
+@using Microsoft.AspNetCore.Components
+@using WebApplicationApi.Models.DataModels
+@using WebApplicationApi.Models.Dtos.Booking
+@using WebApplicationApi.Enums
+@using WebApplicationApi.Models.Dtos.User
+
+@inject NavigationManager NavigationManager
+@inject BookingService BookingService
+@inject ProductService ProductService
+<h3>Booking Request</h3>
+
+@if (product == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row justify-content-start">
+            <div class="col-md-6 col-sm-8 col-12">
+                <EditForm Model="bookingDto" OnSubmit="CreateBooking" FormName="addBookingForm">
+                    <div class="mb-3">
+                        <label for="nameInput" class="form-label">Product</label>
+                        <InputText id="nameInput" class="form-control" @bind-Value="product.Name" disabled/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="priceInput" class="form-label">Price</label>
+                        <InputNumber id="priceInput" class="form-control" @bind-Value="product.Price" disabled/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dateInput" class="form-label">Date</label>
+                        <InputDate id="dateInput" class="form-control" @bind-Value="bookingDto.Date" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="timeInput" class="form-label">Time</label>
+                        <InputDate id="timeInput" class="form-control" @bind-Value="bookingDto.Time" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="addressInput" class="form-label">Address</label>
+                        <InputText id="addressInput" class="form-control" @bind-Value="bookingDto.User.Address" />
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+
+    public ProductModel product = null;
+
+    public UserModel user = null;
+
+    [SupplyParameterFromForm]
+    public BookingDto bookingDto { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        product = await ProductService.GetProductByIdAsync(Id);
+        
+        bookingDto = new BookingDto()
+        {
+            Product = new ProductModel()
+            {
+                Id = product.Id,
+                Name = product.Name
+            },
+            User = new UserModel
+            {
+                Id = 4,
+                Address = "GD"
+            },
+            Date = DateTime.Today,
+            Time = DateTime.Now,
+            Status = BookingStatus.Submitted,
+            Quantity = 1
+        };
+    }
+
+    protected async Task CreateBooking()
+    {
+        var dto = bookingDto;
+        await BookingService.CreateBookingAsync(bookingDto);
+        NavigationManager.NavigateTo("/Bookings");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/Bookings");
+    }
+}

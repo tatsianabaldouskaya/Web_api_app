@@ -73,7 +73,8 @@ public class UsersController : ControllerBase
             Phone = userDto.Phone,
             Login = userDto.Login,
             Password = userDto.Password,
-            Email = userDto.Email
+            Email = userDto.Email,
+            Address = userDto.Address,
         };
 
         var result = await _repository.UpdateAsync(id, user);

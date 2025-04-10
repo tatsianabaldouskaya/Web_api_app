@@ -1,4 +1,4 @@
-﻿@page "/Users/Edit/{Id:int}"
+﻿@page "/Users/Edit/{id:int}"
 @inject UserService UserService
 @using WebApplicationApi.Models.DataModels
 @using WebApplicationApi.Models.Dtos.User
@@ -13,48 +13,62 @@
 }
 else
 {
-    <EditForm Model="user" OnValidSubmit = "SaveUser">
-        <div class="mb-3">
-            <label for="nameInput" class="form-label">Name</label>
-            <InputText id="nameInput" class="form-control" @bind-Value="user.Name" />
+    <div class="container mt-5">
+        <div class="row justify-content-start">
+            <div class="col-md-6 col-sm-8 col-12">
+                <EditForm Model="user" OnSubmit="SaveUser" FormName="editUserForm">
+                    <div class="mb-3">
+                        <label for="nameInput" class="form-label">User Id</label>
+                        <InputNumber id="nameInput" class="form-control" @bind-Value="user.Id" disabled/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nameInput" class="form-label">Name</label>
+                        <InputText id="nameInput" class="form-control" @bind-Value="user.Name"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="emailInput" class="form-label">Email</label>
+                        <InputText id="emailInput" class="form-control" @bind-Value="user.Email"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phoneInput" class="form-label">Phone Number</label>
+                        <InputText id="phoneInput" class="form-control" @bind-Value="user.Phone"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="addressInput" class="form-label">Address</label>
+                        <InputText id="addressInput" class="form-control" @bind-Value="user.Address"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginInput" class="form-label">Login</label>
+                        <InputText id="loginInput" class="form-control" @bind-Value="user.Login"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="passwordInput" class="form-label">Password</label>
+                        <InputText id="passwordInput" class="form-control" @bind-Value="user.Password"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </EditForm>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="emailInput" class="form-label">Email</label>
-            <InputText id="emailInput" class="form-control" @bind-Value="user.Email" />
-        </div>
-        <div class="mb-3">
-            <label for="roleSelect" class="form-label">Role</label>
-            <InputNumber id="roleSelect" class="form-control" @bind-Value="user.RoleId">
-            </InputNumber>
-        </div>
-        <div class="mb-3">
-            <label for="emailInput" class="form-label">Phone Number</label>
-            <InputText id="emailInput" class="form-control" @bind-Value="user.Phone" />
-        </div>
-        <div class="mb-3">
-            <label for="emailInput" class="form-label">Address</label>
-            <InputText id="emailInput" class="form-control" @bind-Value="user.Address" />
-        </div>
-        <div class="mb-3">
-            <label for="emailInput" class="form-label">Login</label>
-            <InputText id="emailInput" class="form-control" @bind-Value="user.Password" />
-        </div>
-        <button type="submit" class="btn btn-primary" @onclick="SaveUser">Save</button>
-    </EditForm>
+    </div>
 }
 
+@inject NavigationManager NavigationManager
 @code {
+
     [Parameter]
     public int Id { get; set; }
 
-    public UserModel user = null;
-
-    public UserDto UserData { get; set; }
+    [SupplyParameterFromForm]
+    public UserModel? user { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
         user = await UserService.GetUserByIdAsync(Id);
-        UserData = new UserDto()
+    }
+
+    protected async Task SaveUser()
+    {
+        var dto = new UserDto
         {
             Name = user.Name,
             Address = user.Address,
@@ -64,10 +78,9 @@ else
             Phone = user.Phone,
             Role = (Role)user.RoleId
         };
-    }
 
-    protected async Task SaveUser()
-    {
-        var response = await UserService.EditUserAsync(Id, UserData);
+        var response = await UserService.EditUserAsync(Id, dto);
+
+        NavigationManager.NavigateTo("/Users");
     }
 }

@@ -1,8 +1,6 @@
 ﻿@page "/Products"
 @using WebAppUI.Services
 @using WebApplicationApi.Models.DataModels
-
-
 <h3>Catalogue</h3>
 
 @if (_products == null)
@@ -25,17 +23,34 @@ else
                             <p class="card-text"><strong>Price:</strong> @string.Format("{0:C}", product.Price)</p>
                         </div>
                         <div class="card-footer text-end">
-                            <button class ="btn btn-primary btn-sm">Book</button>
-                            @*                             <button class ="btn btn-primary btn-sm">Edit</button>
-                            <button class="btn btn-danger btn-sm">Delete</button>
-                    <button class ="btn btn-success btn-sm">Create</button>*@
+                            <a class="btn btn-primary btn-sm" href="/Bookings/Add/@product.Id">Book</a>
+                            <a class="btn btn-primary btn-sm" href="/Products/Edit/@product.Id">Edit</a>
+                            <a class="btn btn-danger btn-sm">Delete</a>
+                            <a class ="btn btn-success btn-sm">Create</a>
                         </div>
                     </div>
                 </div>
             }
         </div>
     </div>
+
+    <nav aria-label="...">
+        <ul class="pagination">
+            <li class="page-item disabled">
+                <a class="page-link">Previous</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item active" aria-current="page">
+                <a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
 }
+
 
 @inject ProductService ProductService
 @code {

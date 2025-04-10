@@ -1,36 +1,21 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿<nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">BookShop</a>
+        <a class="navbar-brand" href="/">Bookshop</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link" href="/Products">Catalogue</a>
+                <a class="nav-link" href="/Users">Users</a>
+                <a class="nav-link" href="/Bookings">Bookings</a>
+                <a class="nav-link" href="/Login">Login</a>
+            </div>
+        </div>
+        <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
     </div>
-</div>
-
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Products">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Products
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Bookings">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Bookings
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Users">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Users
-            </NavLink>
-        </div>
-    </nav>
-</div>
+</nav>
 

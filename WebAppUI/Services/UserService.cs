@@ -1,19 +1,16 @@
-﻿using WebApplicationApi.Authorization;
+﻿using Newtonsoft.Json;
+using System.Text;
+
+using WebApplicationApi.Authorization;
 using WebApplicationApi.Models.DataModels;
 using WebApplicationApi.Models.Dtos.User;
 
 namespace WebAppUI.Services;
 
-public class UserService
+public class UserService : BaseService
 {
-    private readonly HttpClient _httpClient;
-
-    public UserService(HttpClient httpClient)
+    public UserService(IHttpClientFactory httpClient) : base(httpClient)
     {
-        _httpClient = httpClient;
-        var token = new TokenGenerator().GenerateSuperUserJwtToken();
-        _httpClient.DefaultRequestHeaders.Add(Config.ApiKeyHeader, Config.ApiKey);
-        _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
     }
 
     public async Task<List<UserModel>> GetUsersAsync()
@@ -35,6 +32,7 @@ public class UserService
     public async Task<UserModel> EditUserAsync(int id, UserDto userDto)
     {
         var response = await _httpClient.PutAsJsonAsync($"api/Users/{id}", userDto);
+        response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<UserModel>();
     }
 }

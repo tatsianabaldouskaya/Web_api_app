@@ -1,52 +1,85 @@
-﻿@page "/Products/Add"
-@using System.Runtime.CompilerServices
+﻿@page "/Products/Edit/{id:int}"
+
 @using Microsoft.AspNetCore.Components
+@using WebApplicationApi.Models.DataModels
 @using WebApplicationApi.Models.Dtos.Product
 @using WebAppUI.Services
-<PageTitle> Products</PageTitle>
-<h3>Add Product</h3>
 
+<h3>Edit Product</h3>
 
-    <div class="form-group">
-        <label for="name">Name</label>
-        <InputText id="name" @bind-Value="productDto.Name" class="form-control" required />
-        <ValidationMessage For="@(() => productDto.Name)" />
-    </div>
-
-    <div class="form-group">
-        <label for="author">Author</label>
-        <InputText id="author" @bind-Value="productDto.Author" class="form-control" required />
-        <ValidationMessage For="@(() => productDto.Author)" />
-    </div>
-
-    <div class="form-group">
-        <label for="description">Description</label>
-        <InputTextArea id="description" @bind-Value="productDto.Description" class="form-control" />
-    </div>
-
-    <div class="form-group">
-        <label for="price">Price</label>
-        <InputNumber id="price" @bind-Value="productDto.Price" class="form-control" required />
-        <ValidationMessage For="@(() => productDto.Price)" />
-    </div>
-
-    <div class="form-group">
-        <label for="imagePath">Image Path (URL)</label>
-        <InputText id="imagePath" @bind-Value="productDto.ImagePath" class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Save</button>
-
-@code
- 
+@if (product == null)
 {
-    private ProductDto productDto = new ProductDto()
-    {
-        Name = "Sample book",
-        Author = "Sample Author",
-        Description = "234234",
-        ImagePath = "image.jpg",
-        Price = 10
-    };
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row justify-content-start">
+            <div class="col-md-6 col-sm-8 col-12">
+                <EditForm Model="productDto" OnSubmit = "SaveProduct" FormName="editProductForm">
+                    <div class="mb-3">
+                        <label for="nameInput" class="form-label">Name</label>
+                        <InputText id="nameInput" class="form-control" @bind-Value="productDto.Name" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="descInput" class="form-label">Description</label>
+                        <InputText id="descInput" class="form-control" @bind-Value="productDto.Description" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="authorInput" class="form-label">Author</label>
+                        <InputText id="authorInput" class="form-control" @bind-Value="productDto.Author" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="priceInput" class="form-label">Price</label>
+                        <InputNumber id="priceInput" class="form-control" @bind-Value="productDto.Price" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
 
+
+@inject ProductService ProductService
+@code
+{
+    [Parameter]
+    public int Id { get; set; }
+
+    public ProductModel product = null;
+
+    [SupplyParameterFromForm]
+    public ProductDto productDto { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (product == null)
+        {
+            product = await ProductService.GetProductByIdAsync(Id);
+        }
+
+        productDto = new ProductDto()
+            {
+                Name = product.Name,
+                Author = product.Author,
+                Price = product.Price,
+                Description = product.Description
+            };
+    }
+
+    protected async Task SaveProduct()
+    {
+        Console.WriteLine($"ui product: {productDto.Name}, {productDto.Price}");
+
+        var updatedproductDto = new ProductDto
+        {
+            Name = productDto.Name,
+            Author = productDto.Author,
+            Price = productDto.Price,
+            Description = productDto.Description,
+            ImagePath = productDto.ImagePath
+        };
+        await ProductService.UpdateProductAsync(Id, updatedproductDto);
+    }
 }
