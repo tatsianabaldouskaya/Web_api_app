@@ -1,12 +1,11 @@
-﻿using WebApplicationApi.Authorization;
-using WebApplicationApi.Models.DataModels;
+﻿using WebApplicationApi.Models.DataModels;
 using WebApplicationApi.Models.Dtos.Product;
 
 namespace WebAppUI.Services;
 
 public class ProductService : BaseService
 {
-    public ProductService(IHttpClientFactory httpClient) : base(httpClient)
+    public ProductService(IHttpClientFactory httpClient, AuthService authService) : base(httpClient, authService)
     {
     }
 

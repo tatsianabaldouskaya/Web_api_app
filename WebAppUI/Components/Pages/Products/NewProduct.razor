@@ -1,0 +1,62 @@
+﻿@page "/Products/Add"
+
+@using WebAppUI.Services
+@using Microsoft.AspNetCore.Components
+@using WebApplicationApi.Models.Dtos.Product
+
+@inject NavigationManager NavigationManager
+@inject ProductService ProductService
+<h3> Create product</h3>
+
+
+    <div class="container mt-5">
+        <div class="row justify-content-start">
+            <div class="col-md-6 col-sm-8 col-12">
+                <EditForm Model="productDto" OnSubmit="CreateProduct" FormName="addProductForm">
+                    <div class="mb-3">
+                        <label for="nameInput" class="form-label">Product</label>
+                        <InputText id="nameInput" class="form-control" @bind-Value="productDto.Name" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="priceInput" class="form-label">Price</label>
+                        <InputNumber id="priceInput" class="form-control" @bind-Value="productDto.Price" required />
+                    </div>
+                    <div class="mb-3">
+                        <label for="descInput" class="form-label">Description</label>
+                        <InputText id="descInput" class="form-control" @bind-Value="productDto.Description" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="authorInput" class="form-label">Author</label>
+                        <InputText id="authorInput" class="form-control" @bind-Value="productDto.Author" required/>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+
+
+@code {
+    
+    [SupplyParameterFromForm]
+    public ProductDto productDto { get; set; } = new ProductDto()
+    {
+        Name = null,
+        Price = null,
+        Author = null
+    };
+
+    protected async Task CreateProduct()
+    {
+        await ProductService.CreateProductAsync(productDto);
+        NavigationManager.NavigateTo("/Products");
+    }
+
+    private void Cancel()
+    {
+        NavigationManager.NavigateTo("/Products");
+    }
+}

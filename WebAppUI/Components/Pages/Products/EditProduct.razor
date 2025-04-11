@@ -4,6 +4,7 @@
 @using WebApplicationApi.Models.DataModels
 @using WebApplicationApi.Models.Dtos.Product
 @using WebAppUI.Services
+@inject NavigationManager NavigationManager
 
 <h3>Edit Product</h3>
 
@@ -47,16 +48,10 @@ else
     [Parameter]
     public int Id { get; set; }
 
-    public ProductModel product = null;
+    public ProductModel product;
 
     [SupplyParameterFromForm]
-    public ProductDto productDto { get; set; } = new ProductDto()
-    {
-        Author = null,
-        Description = null,
-        Price = null,
-        Name = null
-    };
+    public ProductDto? productDto { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -65,7 +60,7 @@ else
             product = await ProductService.GetProductByIdAsync(Id);
         }
 
-        productDto = new ProductDto()
+        productDto = productDto ?? new ProductDto()
             {
                 Name = product.Name,
                 Author = product.Author,
@@ -76,16 +71,7 @@ else
 
     protected async Task SaveProduct()
     {
-        Console.WriteLine($"ui product: {productDto.Name}, {productDto.Price}");
-
-        var updatedproductDto = new ProductDto
-        {
-            Name = productDto.Name,
-            Author = productDto.Author,
-            Price = productDto.Price,
-            Description = productDto.Description,
-            ImagePath = productDto.ImagePath
-        };
-        await ProductService.UpdateProductAsync(Id, updatedproductDto);
+        await ProductService.UpdateProductAsync(Id, productDto);
+        NavigationManager.NavigateTo("/Products");
     }
 }

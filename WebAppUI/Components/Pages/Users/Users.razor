@@ -1,6 +1,8 @@
 ﻿@page "/Users"
 @using WebApplicationApi.Models.DataModels
 @using WebAppUI.Services
+@using WebApplicationApi.Enums
+@inject AuthService AuthService
 
 @if (_users == null)
 {
@@ -8,6 +10,30 @@
 }
 else
 {
+    <form class="container mb-4">
+        <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">User Name</label>
+                    <input class="form-control" id="name" type="search" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Login</label>
+                    <input class="form-control" id="login" type="search" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">User Id</label>
+                    <input class="form-control" id="author" type="search" />
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Email</label>
+                    <input class="form-control" id="price" type="search" />
+                </div>
+                <div class="col-12 text-end mt-2">
+                    <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+        <h3>Search results</h3>
     <div class="table-responsive">
         <div class="fs-5 fw-bold">Search Results</div>
         <table class="table table-bordered align-middle">

@@ -1,15 +1,11 @@
-﻿using Newtonsoft.Json;
-using System.Text;
-
-using WebApplicationApi.Authorization;
-using WebApplicationApi.Models.DataModels;
+﻿using WebApplicationApi.Models.DataModels;
 using WebApplicationApi.Models.Dtos.User;
 
 namespace WebAppUI.Services;
 
 public class UserService : BaseService
 {
-    public UserService(IHttpClientFactory httpClient) : base(httpClient)
+    public UserService(IHttpClientFactory httpClient, AuthService authService) : base(httpClient, authService)
     {
     }
 
@@ -32,7 +28,6 @@ public class UserService : BaseService
     public async Task<UserModel> EditUserAsync(int id, UserDto userDto)
     {
         var response = await _httpClient.PutAsJsonAsync($"api/Users/{id}", userDto);
-        response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<UserModel>();
     }
 }

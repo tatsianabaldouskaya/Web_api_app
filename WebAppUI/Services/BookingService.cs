@@ -1,12 +1,11 @@
-﻿using WebApplicationApi.Authorization;
-using WebApplicationApi.Models.DataModels;
+﻿using WebApplicationApi.Models.DataModels;
 using WebApplicationApi.Models.Dtos.Booking;
 
 namespace WebAppUI.Services;
 
 public class BookingService : BaseService
 {
-    public BookingService(IHttpClientFactory httpClient) : base(httpClient)
+    public BookingService(IHttpClientFactory httpClient, AuthService authService) : base(httpClient, authService)
     {
     }
     public async Task<List<BookingModel>> GetBookingsAsync()

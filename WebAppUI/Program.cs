@@ -14,7 +14,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<BookingService>();
 builder.Services.AddSingleton<AuthService>();
-builder.Services.AddScoped<ProtectedSessionStorage>();
+builder.Services.AddSingleton<BaseService>();
 
 builder.Services.AddRazorComponents();
 builder.Services.AddRazorPages();

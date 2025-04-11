@@ -48,8 +48,7 @@ public class UsersController : ControllerBase
 
     }
 
-    [HttpGet]
-    [Route("{id}")]
+    [HttpGet("{id}")]
     public async Task<ActionResult<UserModel>> GetUser(int id)
     {
         var user = await _repository.GetByIdAsync(id);
@@ -62,8 +61,7 @@ public class UsersController : ControllerBase
         return Ok(user);
     }
 
-    [HttpPut]
-    [Route("{id}")]
+    [HttpPut("{id}")]
     public async Task<ActionResult> UpdateUser(int id, UserDto userDto)
     {
         var user = new UserModel()
@@ -87,8 +85,7 @@ public class UsersController : ControllerBase
         return Ok(result);
     }
 
-    [HttpDelete]
-    [Route("{id}")]
+    [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteUser(int id)
     {
         var isDeleted = await _repository.DeleteAsync(id);
