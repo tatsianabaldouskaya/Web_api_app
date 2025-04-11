@@ -16,11 +16,11 @@ builder.Services.AddScoped<BookingService>();
 builder.Services.AddSingleton<AuthService>();
 builder.Services.AddScoped<ProtectedSessionStorage>();
 
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents(); ;
+builder.Services.AddRazorComponents();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -33,10 +33,10 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+app.UseRouting();
 app.UseAntiforgery();
 
-app.MapRazorComponents<App>()
-    .AddInteractiveServerRenderMode();
+app.MapRazorComponents<App>();
 app.MapRazorPages();
 
 

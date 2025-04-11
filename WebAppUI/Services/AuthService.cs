@@ -1,6 +1,4 @@
-﻿using System.Data;
-
-using WebApplicationApi.Authorization;
+﻿using WebApplicationApi.Authorization;
 using WebApplicationApi.Enums;
 using WebApplicationApi.Models.Dtos;
 
@@ -8,8 +6,10 @@ namespace WebAppUI.Services;
 
 public class AuthService
 {
-    public string Token { get; private set; }
-    public Role? CurrentRole { get; private set; }
+    public string Token { get; set; }
+    public Role? CurrentRole { get; set; }
+
+    public event Action OnChange;
 
     public void Login(LoginDto loginDto)
     {
@@ -25,16 +25,22 @@ public class AuthService
         {
             Token = new TokenGenerator().GenerateJwtToken(CurrentRole.ToString());
         }
+
+        NotifyStateChanged();
     }
 
     public void Logout()
     {
         Token = null;
         CurrentRole = null;
+
+        NotifyStateChanged();
     }
 
     public bool IsAuthenticated()
     {
         return CurrentRole != null;
     }
+
+    private void NotifyStateChanged() => OnChange?.Invoke();
 }

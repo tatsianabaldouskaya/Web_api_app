@@ -50,7 +50,13 @@ else
     public ProductModel product = null;
 
     [SupplyParameterFromForm]
-    public ProductDto productDto { get; set; }
+    public ProductDto productDto { get; set; } = new ProductDto()
+    {
+        Author = null,
+        Description = null,
+        Price = null,
+        Name = null
+    };
 
     protected override async Task OnParametersSetAsync()
     {

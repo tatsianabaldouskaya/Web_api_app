@@ -37,7 +37,6 @@
 
     public async Task Authenticate()
     {
-        var data = loginDto;
         AuthService.Login(loginDto);
 
         await Task.Delay(100);

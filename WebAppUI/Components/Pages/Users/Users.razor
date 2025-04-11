@@ -9,8 +9,8 @@
 else
 {
     <div class="table-responsive">
+        <div class="fs-5 fw-bold">Search Results</div>
         <table class="table table-bordered align-middle">
-            <caption class="text-start fs-5 fw-bold">Search Results</caption>
             <thead class="table-light">
             <tr>
                 <th>User Id</th>
@@ -40,21 +40,23 @@ else
     </div>
     <button class="btn btn-success btn-sm">Create</button>
 
-    <nav aria-label="...">
-        <ul class="pagination">
-            <li class="page-item disabled">
-                <a class="page-link">Previous</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">1</a></li>
-            <li class="page-item active" aria-current="page">
-                <a class="page-link" href="#">2</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-            </li>
-        </ul>
-    </nav>
+    <div class="d-flex justify-content-end mt-3">
+        <nav aria-label="...">
+            <ul class="pagination">
+                <li class="page-item disabled">
+                    <a class="page-link">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="#">2</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 }
 @inject UserService UserService
 @code {
