@@ -5,7 +5,7 @@ namespace Taf.PageObjects;
 public class CataloguePage : BasePage
 {
     private readonly By _addProductButton = By.XPath("//button[text()='Create']");
-    private readonly By _bookButton = By.XPath("//button[text()='Book']");
+    private readonly By _bookButton = By.XPath(".//button[text()='Book']");
     private readonly By _productCard = By.XPath("//div[contains(@class,'col mb-4')]");
     private readonly By _productName = By.XPath(".//h5[contains(@class,'card-title')]");
 
@@ -20,7 +20,6 @@ public class CataloguePage : BasePage
 
         var bookButton = product.FindElement(_bookButton);
 
-        ScrollToElement(bookButton);
         bookButton.Click();
 
         return new AddBookingPage(Driver);

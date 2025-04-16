@@ -16,6 +16,7 @@ namespace Tests.End2End;
 public class EndToEndTests : IDisposable
 {
     private MainPage _mainPage;
+    private BookingsPage _bookingsPage;
     private readonly AppDbContext _dbContext;
     private readonly ProductRepository _productRepository;
     private readonly BookingRepository _bookingRepository;
@@ -25,6 +26,7 @@ public class EndToEndTests : IDisposable
     {
         _driver = ChromeWebDriver.InitializeDriver();
         _mainPage = new MainPage(_driver);
+        _bookingsPage = new BookingsPage(_driver);
         _dbContext = TestDbContext.CreateDbContext();
         _productRepository = new ProductRepository(_dbContext);
         _bookingRepository = new BookingRepository(_dbContext);
@@ -60,11 +62,12 @@ public class EndToEndTests : IDisposable
             .OpenBookingFormForProduct(product.Name)
             .AddBooking(preparedBookingDto);
 
-        // Assert
-        Thread.Sleep(1000);
         var bookings = await _bookingRepository.GetAllAsync();
         var booking = bookings.FirstOrDefault(p => p.ProductId == product.Id);
+        
+        // Assert
         booking.Should().NotBeNull();
+        _bookingsPage.IsNewBookingDisplayed(productModel.Name).Should().BeTrue();
     }
 
     [Fact]

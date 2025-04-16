@@ -97,6 +97,7 @@ using (var scope = app.Services.CreateScope())
     {
         dbContext.Database.Migrate();
     }
+    dbContext.SeedUsers();
 }
 
 // Configure the HTTP request pipeline.

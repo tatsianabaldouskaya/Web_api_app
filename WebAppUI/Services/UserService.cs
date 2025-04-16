@@ -14,7 +14,7 @@ public class UserService : BaseService
         return await _httpClient.GetFromJsonAsync<List<UserModel>>("api/Users");
     }
 
-    public async Task<UserModel?> GetUserByIdAsync(int id)
+    public async Task<UserModel> GetUserByIdAsync(int id)
     {
         return await _httpClient.GetFromJsonAsync<UserModel>($"api/Users/{id}");
     }

@@ -4,8 +4,8 @@ namespace Taf.PageObjects;
 
 public class BookingsPage : BasePage
 {
-    private readonly By _bookingCards = By.XPath("//div[contains(@class,'card')]");
-    private readonly By _productName = By.XPath(".//h5[contains(@class,'card-title')]");
+    private readonly By _bookingCards = By.XPath("//div[contains(@class,'col mb-4')]");
+    private readonly By _productName = By.XPath(".//h4[contains(@class,'card-title')]");
 
     public BookingsPage(IWebDriver driver) : base(driver)
     {
@@ -16,11 +16,11 @@ public class BookingsPage : BasePage
         return Driver.FindElements(_bookingCards);
     }
 
-    public BookingsPage FindBookingByProductName(string productName)
+    public bool IsNewBookingDisplayed(string productName)
     {
-        GetAllBookingCards()
-            .FirstOrDefault(x => x.FindElement(_productName).Text == productName);
-        return this;
+        var booking = GetAllBookingCards()
+            .FirstOrDefault(x => x.FindElement(_productName).Text.Trim().Equals(productName, StringComparison.OrdinalIgnoreCase));
+        return booking != null;
     }
 
     private void ScrollToBottom()

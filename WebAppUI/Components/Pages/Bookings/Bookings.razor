@@ -20,6 +20,7 @@ else
                     <div class="card border-secondary h-100 shadow-sm">
                         <img src="@($"/Images/{booking.ProductId}.jpg")" class="card-img-top" alt="Product Image">
                         <div class="card-body text-start">
+                            <h4 class="card-title">@(_productTitles.ContainsKey(booking.ProductId) ? _productTitles[booking.ProductId] : "Unknown Product")</h4>
                             <h5 class="card-title">@booking.ProductId</h5>
                             <p class="card-text"><strong>Date:</strong> @booking.Date</p>
                             <p class="card-text"><strong>Delivery Address:</strong>@booking.DeliveryAddress</p>
@@ -60,12 +61,23 @@ else
     </div>
 }
 @inject BookingService BookingService;
+@inject ProductService ProductService;
 @code {
     private List<BookingModel> _bookings;
+
+    private Dictionary<int?, string> _productTitles = new();
 
     protected override async Task OnInitializedAsync()
     {
         _bookings = await BookingService.GetBookingsAsync();
-    }
 
+        foreach (var booking in _bookings)
+        {
+            var product = await ProductService.GetProductByIdAsync(booking.ProductId);
+            if (product != null)
+            {
+                _productTitles[booking.ProductId] = product.Name;
+            }
+        }
+    }
 }

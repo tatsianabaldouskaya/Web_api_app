@@ -24,6 +24,10 @@
             {
                 <a class="nav-link" href="/Store">Store</a>
             }
+            @if (AuthService.CurrentRole == Role.Customer)
+            {
+                <a class="nav-link" href="/Users/profile">User Profile</a>
+            }
             @if (AuthService.CurrentRole == null)
             {
                 <a class="nav-link" href="/Login">Login</a>

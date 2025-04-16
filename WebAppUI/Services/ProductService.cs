@@ -14,7 +14,7 @@ public class ProductService : BaseService
         return await _httpClient.GetFromJsonAsync<List<ProductModel>>("api/Products");
     }
 
-    public async Task<ProductModel> GetProductByIdAsync(int id)
+    public async Task<ProductModel> GetProductByIdAsync(int? id)
     {
         return await _httpClient.GetFromJsonAsync<ProductModel>($"api/Products/{id}");
     }

@@ -142,4 +142,48 @@ public class AppDbContext : DbContext
                 .HasColumnName("quantity");
         });
     }
+
+    public void SeedUsers()
+    {
+        if (!Users.Any(u => u.Login == "admin"))
+        {
+            Users.Add(new UserModel
+            {
+                Login = "admin",
+                Password = "admin",
+                Name = "Admin",
+                RoleId = (int)Role.Admin,
+                Address = "Admin Office",
+                Phone = "1234567890"
+            });
+        }
+
+        if (!Users.Any(u => u.Login == "manager"))
+        {
+            Users.Add(new UserModel
+            {
+                Login = "manager",
+                Password = "manager",
+                Name = "Manager",
+                RoleId = (int)Role.Manager,
+                Address = "Manager Office",
+                Phone = "0987654321"
+            });
+        }
+
+        if (!Users.Any(u => u.Login == "customer"))
+        {
+            Users.Add(new UserModel
+            {
+                Login = "customer",
+                Password = "customer",
+                Name = "Customer",
+                RoleId = (int)Role.Customer,
+                Address = "Customer Address",
+                Phone = "1122334455"
+            });
+        }
+
+        SaveChanges();
+    }
 }

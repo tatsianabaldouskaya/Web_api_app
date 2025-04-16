@@ -8,6 +8,7 @@ public class AuthService
 {
     public string? Token { get; set; }
     public Role? CurrentRole { get; set; }
+    public int? UserId { get; set; }
 
     public void Login(LoginDto loginDto)
     {
@@ -29,6 +30,7 @@ public class AuthService
     {
         Token = null;
         CurrentRole = null;
+        UserId = null;
     }
 
     public bool IsAuthenticated()
