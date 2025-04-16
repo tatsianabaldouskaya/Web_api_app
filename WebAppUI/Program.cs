@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 using WebAppUI.Components;
 using WebAppUI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
 builder.Services.AddHttpClient("ApiClient", client =>
 {
     client.BaseAddress = new Uri("https://localhost:7203/");
@@ -13,6 +12,7 @@ builder.Services.AddHttpClient("ApiClient", client =>
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<ProductService>();
 builder.Services.AddScoped<BookingService>();
+builder.Services.AddScoped<StoreItemsService>();
 builder.Services.AddSingleton<AuthService>();
 builder.Services.AddSingleton<BaseService>();
 
@@ -26,7 +26,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

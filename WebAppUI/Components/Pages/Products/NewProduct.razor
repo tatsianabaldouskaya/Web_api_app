@@ -6,10 +6,9 @@
 
 @inject NavigationManager NavigationManager
 @inject ProductService ProductService
+
 <h3> Create product</h3>
-
-
-    <div class="container mt-5">
+<div class="container mt-5">
         <div class="row justify-content-start">
             <div class="col-md-6 col-sm-8 col-12">
                 <EditForm Model="productDto" OnSubmit="CreateProduct" FormName="addProductForm">
@@ -38,11 +37,9 @@
         </div>
     </div>
 
-
 @code {
-    
     [SupplyParameterFromForm]
-    public ProductDto productDto { get; set; } = new ProductDto()
+    public ProductDto productDto { get; set; } = new()
     {
         Name = null,
         Price = null,

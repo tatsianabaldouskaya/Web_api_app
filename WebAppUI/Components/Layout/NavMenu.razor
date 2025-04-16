@@ -20,13 +20,17 @@
             {
                 <a class="nav-link" href="/Bookings">Bookings</a>
             }
+            @if (AuthService.CurrentRole == Role.Manager)
+            {
+                <a class="nav-link" href="/Store">Store</a>
+            }
             @if (AuthService.CurrentRole == null)
             {
                 <a class="nav-link" href="/Login">Login</a>
             }
             else
             {
-                <a class="btn" @onclick="Logout">Log out</a>
+                <a class="nav-link" href="/Logout">Log out</a>
             }
         </div>
 

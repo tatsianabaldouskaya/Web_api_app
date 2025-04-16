@@ -1,6 +1,4 @@
-﻿using WebApplicationApi.Authorization;
-
-namespace WebAppUI.Services;
+﻿namespace WebAppUI.Services;
 
 public class BaseService
 {

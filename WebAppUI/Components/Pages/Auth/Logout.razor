@@ -1,0 +1,13 @@
+﻿@page "/Logout"
+
+@using WebAppUI.Services
+@inject NavigationManager NavigationManager;
+@inject AuthService AuthService;
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        AuthService.Logout();
+        NavigationManager.NavigateTo("/");
+    }
+}

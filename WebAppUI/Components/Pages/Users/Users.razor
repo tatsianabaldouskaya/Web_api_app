@@ -1,7 +1,7 @@
 ﻿@page "/Users"
 @using WebApplicationApi.Models.DataModels
 @using WebAppUI.Services
-@using WebApplicationApi.Enums
+
 @inject AuthService AuthService
 
 @if (_users == null)
@@ -22,11 +22,11 @@ else
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">User Id</label>
-                    <input class="form-control" id="author" type="search" />
+                    <input class="form-control" id="iserId" type="search" />
                 </div>
                 <div class="col-md-6">
                     <label class="form-label">Email</label>
-                    <input class="form-control" id="price" type="search" />
+                    <input class="form-control" id="email" type="search" />
                 </div>
                 <div class="col-12 text-end mt-2">
                     <button class="btn btn-primary btn-sm" type="submit">Search</button>

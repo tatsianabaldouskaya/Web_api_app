@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "Tests\Tests.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppUI", "WebAppUI\WebAppUI.csproj", "{0C235A31-9925-4917-9E8C-6042B1B7FC01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taf", "Taf\Taf.csproj", "{FE3E016F-6030-45C7-81C5-D91161751987}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{0C235A31-9925-4917-9E8C-6042B1B7FC01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C235A31-9925-4917-9E8C-6042B1B7FC01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C235A31-9925-4917-9E8C-6042B1B7FC01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE3E016F-6030-45C7-81C5-D91161751987}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE3E016F-6030-45C7-81C5-D91161751987}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE3E016F-6030-45C7-81C5-D91161751987}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE3E016F-6030-45C7-81C5-D91161751987}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

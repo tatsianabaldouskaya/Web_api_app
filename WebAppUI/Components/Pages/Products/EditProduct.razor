@@ -4,6 +4,7 @@
 @using WebApplicationApi.Models.DataModels
 @using WebApplicationApi.Models.Dtos.Product
 @using WebAppUI.Services
+
 @inject NavigationManager NavigationManager
 
 <h3>Edit Product</h3>
@@ -60,7 +61,7 @@ else
             product = await ProductService.GetProductByIdAsync(Id);
         }
 
-        productDto = productDto ?? new ProductDto()
+        productDto = productDto ?? new()
             {
                 Name = product.Name,
                 Author = product.Author,

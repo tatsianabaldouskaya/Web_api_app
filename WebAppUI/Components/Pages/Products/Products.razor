@@ -54,12 +54,12 @@ else
                         <div class="card-footer text-end">
                             @if (AuthService.CurrentRole == Role.Customer)
                             {
-                                <a class="btn btn-primary btn-sm" href="/Bookings/Add/@product.Id">Book</a>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='/Bookings/Add/@product.Id'">Book</button>
                             }
                             @if (AuthService.CurrentRole == Role.Manager)
                             {
-                                <a class="btn btn-primary btn-sm" href="/Products/Edit/@product.Id">Edit</a>
-                                <a class="btn btn-danger btn-sm">Delete</a>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='/Products/Edit/@product.Id'">Edit</button>
+                                <button class="btn btn-danger">Delete</button>
                             }
                         </div>
                     </div>
@@ -71,7 +71,7 @@ else
     <div class="d-flex justify-content-end mt-3">
         @if (AuthService.CurrentRole == Role.Manager)
         {
-            <a class="btn btn-success btn-sm me-3" href="/Products/Add">Create</a>
+            <button class="btn btn-success btn-sm me-3" onclick="window.location.href='/Products/Add';">Create</button>
         }
         <nav aria-label="...">
             <ul class="pagination mb-0">
