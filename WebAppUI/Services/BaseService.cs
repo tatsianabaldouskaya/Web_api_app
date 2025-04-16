@@ -15,4 +15,14 @@ public class BaseService
             _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         }
     }
+
+    public BaseService(IHttpClientFactory httpClientFactory)
+    {
+        _httpClient = httpClientFactory.CreateClient("ApiClient");
+
+        if (!_httpClient.DefaultRequestHeaders.Contains("Authorization"))
+        {
+            _httpClient.DefaultRequestHeaders.Add(Config.ApiKeyHeader, Config.ApiKey);
+        }
+    }
 }

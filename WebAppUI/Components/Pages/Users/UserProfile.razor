@@ -18,7 +18,7 @@ else
                 <EditForm Model="dto" OnSubmit="SaveUser" FormName="editUserForm">
                     <div class="mb-3">
                         <label for="idInput" class="form-label">User Id</label>
-                        <InputNumber id="idInput" class="form-control" @bind-Value="Id" disabled />
+                        <InputNumber id="idInput" class="form-control" @bind-Value="" disabled />
                     </div>
                     <div class="mb-3">
                         <label for="nameInput" class="form-label">Name</label>
@@ -52,10 +52,10 @@ else
 }
 
 @inject NavigationManager NavigationManager
+@inject AuthService AuthService
 @code {
 
-    [Parameter]
-    public int Id { get; set; }
+    public int? Id { get; set; }
 
     public UserModel user { get; set; }
 
@@ -64,6 +64,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        Id = AuthService.UserId;
         if (user == null)
         {
             user = await UserService.GetUserByIdAsync(Id);
@@ -86,6 +87,4 @@ else
         await UserService.EditUserAsync(Id, dto);
         NavigationManager.NavigateTo("/");
     }
-
-
 }

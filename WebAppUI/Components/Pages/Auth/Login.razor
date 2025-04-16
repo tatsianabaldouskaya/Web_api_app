@@ -3,6 +3,7 @@
 @using WebApplicationApi.Enums
 @using WebApplicationApi.Models.Dtos
 @using WebAppUI.Services
+@using WebApplicationApi.Data
 @inject NavigationManager NavigationManager;
 
 <EditForm Model="loginDto" OnSubmit="Authenticate" FormName="loginForm">
@@ -36,7 +37,7 @@
 
     public async Task Authenticate()
     {
-        AuthService.Login(loginDto);
+        await AuthService.Login(loginDto);
 
         await Task.Delay(100);
 

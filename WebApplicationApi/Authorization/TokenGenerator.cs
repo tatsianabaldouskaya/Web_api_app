@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using WebApplicationApi.Enums;
+using WebApplicationApi.Models.Dtos;
 
 namespace WebApplicationApi.Authorization;
 
@@ -29,11 +30,11 @@ public class TokenGenerator
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public string GenerateJwtToken(string role)
+    public string GenerateJwtToken(Role? role)
     {
         var claims = new[]
         {
-            new Claim(ClaimTypes.Role, role)
+            new Claim(ClaimTypes.Role, role.ToString())
         };
 
         var token = new JwtSecurityToken(
