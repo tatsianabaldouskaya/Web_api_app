@@ -1,0 +1,46 @@
+﻿@page "/Login"
+
+@using WebApplicationApi.Enums
+@using WebApplicationApi.Models.Dtos
+@using WebAppUI.Services
+@using WebApplicationApi.Data
+@inject NavigationManager NavigationManager;
+
+<EditForm Model="loginDto" OnSubmit="Authenticate" FormName="loginForm">
+    <div class="needs-validation" style="max-width: 400px; margin: 0 auto;">
+        <div class="mb-3 text-center">
+            <h3>Login</h3>
+        </div>
+        <div class="mb-3">
+            <label>Login</label>
+            <InputText id="loginInput" class="form-control" @bind-Value="loginDto.Username" />
+            <div class="invalid-feedback">Please enter your login.</div>
+        </div>
+        <div class="mb-3">
+            <label>Password</label>
+            <InputText id="passInput" class="form-control" @bind-Value="loginDto.Password" />
+            <div class="invalid-feedback">Please enter your password.</div>
+        </div>
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-primary" type="button">Register</button>
+            <button class="btn btn-success" type="submit">Login</button>
+        </div>
+    </div>
+</EditForm>
+
+@inject AuthService AuthService;
+@code {
+    [SupplyParameterFromForm]
+    private LoginDto loginDto { get; set; } = new LoginDto();
+
+    private Role? role;
+
+    public async Task Authenticate()
+    {
+        await AuthService.Login(loginDto);
+
+        await Task.Delay(100);
+
+        NavigationManager.NavigateTo("/");
+    }
+}

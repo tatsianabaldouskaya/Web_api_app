@@ -1,0 +1,127 @@
+﻿@page "/Bookings"
+
+@using WebAppUI.Services
+@using WebApplicationApi.Models.DataModels
+@using WebApplicationApi.Enums
+@inject AuthService AuthService
+
+@if (_bookings == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @if (AuthService.CurrentRole == Role.Manager)
+    {
+        <form class="container mb-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="userName" class="form-label">User Name</label>
+                    <input class="form-control" id="userName" type="search" name="UserName" />
+                </div>
+                <div class="col-md-6">
+                    <label for="productName" class="form-label">Product Name</label>
+                    <input class="form-control" id="productName" type="search" name="ProductName" />
+                </div>
+                <div class="col-md-6">
+                    <label for="date" class="form-label">Date</label>
+                    <input class="form-control" id="Date" type="search" name="Date" />
+                </div>
+                <div class="col-md-6">
+                    <label for="address" class="form-label">Address</label>
+                    <input class="form-control" id="address" type="search" name="Address" />
+                </div>
+                <div class="col-12 text-end mt-2">
+                    <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+        <h3>Search results</h3>
+    }
+    @if (AuthService.CurrentRole == Role.Customer)
+    {
+        <h3>My Bookings</h3>
+    }
+    <div class="container-fluid text-center">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var booking in _bookings)
+            {
+                <div class ="col mb-4">
+                    <div class="card border-secondary h-100 shadow-sm">
+                        <img src="@($"/Images/{booking.ProductId}.jpg")" class="card-img-top" alt="Product Image">
+                        <div class="card-body text-start">
+                            <h4 class="card-title">@(_productTitles.ContainsKey(booking.ProductId) ? _productTitles[booking.ProductId] : "Unknown Product")</h4>
+                            <h5 class="card-title">@booking.ProductId</h5>
+                            <p class="card-text"><strong>Date:</strong> @booking.Date</p>
+                            <p class="card-text"><strong>Delivery Address:</strong>@booking.DeliveryAddress</p>
+                            <p class="card-text"><strong>Status:</strong> @((BookingStatus)booking.StatusId)</p>
+                        </div>
+                        @if (AuthService.CurrentRole == Role.Customer)
+                        {
+                            <div class="card-footer card-footer d-flex justify-content-between">
+                                <button class="btn btn-primary btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editBookingModal"
+                                        onclick="populateModal(@booking.Id)">
+                                    Edit
+                                </button>
+                                <button class="btn btn-danger btn-sm">Cancel</button>
+                            </div>
+                        }
+                        @if (AuthService.CurrentRole == Role.Manager)
+                        {
+                            <div class="card-footer card-footer d-flex justify-content-between">
+                                <button class="btn btn-success btn-sm">Approve</button>
+                                <button class="btn btn-danger btn-sm">Reject</button>
+                                <button class="btn btn-primary btn-sm">Close</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end mt-3">
+        <nav aria-label="...">
+            <ul class="pagination">
+                <li class="page-item disabled">
+                    <a class="page-link">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="#">2</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+}
+@inject BookingService BookingService;
+@inject ProductService ProductService;
+@code {
+    private List<BookingModel> _bookings;
+
+    private Dictionary<int?, string> _productTitles = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _bookings = await BookingService.GetBookingsAsync();
+        if (AuthService.CurrentRole == Role.Customer)
+        {
+            _bookings = _bookings.Where(x => x.UserId == AuthService.UserId).ToList();
+        }
+
+        foreach (var booking in _bookings)
+        {
+            var product = await ProductService.GetProductByIdAsync(booking.ProductId);
+            if (product != null)
+            {
+                _productTitles[booking.ProductId] = product.Name;
+            }
+        }
+    }
+}

@@ -1,0 +1,58 @@
+﻿@using WebAppUI.Services
+@using WebApplicationApi.Enums
+@using Microsoft.CodeAnalysis.CSharp.Syntax
+@inject AuthService AuthService
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary px-4">
+    <a class="navbar-brand" href="#">Bookshop</a>
+    
+    <div class="ms-auto d-flex align-items-center">
+        <div class="navbar-nav me-3">
+            @if (AuthService.CurrentRole == Role.Manager || AuthService.CurrentRole == Role.Customer)
+            {
+                <a class="nav-link" href="/Products">Catalogue</a>
+            }
+            @if (AuthService.CurrentRole == Role.Admin)
+            {
+                <a class="nav-link" href="/Users">Users</a>
+            }
+            @if (AuthService.CurrentRole == Role.Manager || AuthService.CurrentRole == Role.Customer)
+            {
+                <a class="nav-link" href="/Bookings">Bookings</a>
+            }
+            @if (AuthService.CurrentRole == Role.Manager)
+            {
+                <a class="nav-link" href="/Store">Store</a>
+            }
+            @if (AuthService.CurrentRole == Role.Customer)
+            {
+                <a class="nav-link" href="/Users/profile">User Profile</a>
+            }
+            @if (AuthService.CurrentRole == null)
+            {
+                <a class="nav-link" href="/Login">Login</a>
+            }
+            else
+            {
+                <a class="nav-link" href="/Logout">Log out</a>
+            }
+        </div>
+
+    <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
+    </div>
+</nav>
+
+@inject NavigationManager NavigationManager
+
+@code {
+
+    public void Logout()
+    {
+        AuthService.Logout();
+        var a = AuthService.CurrentRole;
+        NavigationManager.NavigateTo("/", forceLoad: true);
+    }
+}

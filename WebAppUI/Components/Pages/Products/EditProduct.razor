@@ -1,0 +1,78 @@
+﻿@page "/Products/Edit/{id:int}"
+
+@using Microsoft.AspNetCore.Components
+@using WebApplicationApi.Models.DataModels
+@using WebApplicationApi.Models.Dtos.Product
+@using WebAppUI.Services
+
+@inject NavigationManager NavigationManager
+
+<h3>Edit Product</h3>
+
+@if (product == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row justify-content-start">
+            <div class="col-md-6 col-sm-8 col-12">
+                <EditForm Model="productDto" OnSubmit = "SaveProduct" FormName="editProductForm">
+                    <div class="mb-3">
+                        <label for="nameInput" class="form-label">Name</label>
+                        <InputText id="nameInput" class="form-control" @bind-Value="productDto.Name" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="descInput" class="form-label">Description</label>
+                        <InputText id="descInput" class="form-control" @bind-Value="productDto.Description" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="authorInput" class="form-label">Author</label>
+                        <InputText id="authorInput" class="form-control" @bind-Value="productDto.Author" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="priceInput" class="form-label">Price</label>
+                        <InputNumber id="priceInput" class="form-control" @bind-Value="productDto.Price" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+}
+
+
+@inject ProductService ProductService
+@code
+{
+    [Parameter]
+    public int Id { get; set; }
+
+    public ProductModel product;
+
+    [SupplyParameterFromForm]
+    public ProductDto? productDto { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (product == null)
+        {
+            product = await ProductService.GetProductByIdAsync(Id);
+        }
+
+        productDto = productDto ?? new()
+            {
+                Name = product.Name,
+                Author = product.Author,
+                Price = product.Price,
+                Description = product.Description
+            };
+    }
+
+    protected async Task SaveProduct()
+    {
+        await ProductService.UpdateProductAsync(Id, productDto);
+        NavigationManager.NavigateTo("/Products");
+    }
+}

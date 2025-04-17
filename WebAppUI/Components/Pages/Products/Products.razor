@@ -1,0 +1,103 @@
+﻿@page "/Products"
+@using WebAppUI.Services
+@using WebApplicationApi.Models.DataModels
+@using WebApplicationApi.Enums
+
+@inject AuthService AuthService
+
+@if (_products == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @if (AuthService.CurrentRole == Role.Manager)
+    {
+        <form class="container mb-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="productId" class="form-label">Product Id</label>
+                    <input class="form-control" id="productId" type="search" name="ProductId" />
+                </div>
+                <div class="col-md-6">
+                    <label for="productName" class="form-label">Product Name</label>
+                    <input class="form-control" id="productName" type="search" name="ProductName" />
+                </div>
+                <div class="col-md-6">
+                    <label for="author" class="form-label">Author</label>
+                    <input class="form-control" id="author" type="search" name="Author" />
+                </div>
+                <div class="col-md-6">
+                    <label for="price" class="form-label">Price</label>
+                    <input class="form-control" id="price" type="search" name="Price" />
+                </div>
+                <div class="col-12 text-end mt-2">
+                    <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+        <h3>Search results</h3>
+    }
+    <div class="container-fluid text-center">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var product in _products)
+            {
+                <div class="col mb-4">
+                    <div class="card border-secondary h-100 shadow-sm">
+                        <img src="@($"/Images/Book1.jpg")" class="card-img-top" alt="...">
+                        <div class="card-body text-start">
+                            <h5 class="card-title">@product.Name</h5>
+                            <p class="card-text">@product.Description</p>
+                            <p class="card-text"><strong>Author:</strong> @product.Author</p>
+                            <p class="card-text"><strong>Price:</strong> @string.Format("{0:C}", product.Price)</p>
+                        </div>
+                        <div class="card-footer text-end">
+                            @if (AuthService.CurrentRole == Role.Customer)
+                            {
+                                <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='/Bookings/Add/@product.Id'">Book</button>
+                            }
+                            @if (AuthService.CurrentRole == Role.Manager)
+                            {
+                                <button type="button" class="btn btn-primary btn-sm" onclick="window.location.href='/Products/Edit/@product.Id'">Edit</button>
+                                <button class="btn btn-danger">Delete</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end mt-3">
+        @if (AuthService.CurrentRole == Role.Manager)
+        {
+            <button class="btn btn-success btn-sm me-3" onclick="window.location.href='/Products/Add';">Create</button>
+        }
+        <nav aria-label="...">
+            <ul class="pagination mb-0">
+                <li class="page-item disabled">
+                    <a class="page-link">Previous</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="#">2</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+}
+
+
+@inject ProductService ProductService
+@code {
+    private List<ProductModel> _products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _products = await ProductService.GetProductsAsync();
+    }
+}

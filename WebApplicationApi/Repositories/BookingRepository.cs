@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 using WebApplicationApi.Data;
 using WebApplicationApi.Models.DataModels;
@@ -10,12 +9,10 @@ namespace WebApplicationApi.Repositories;
 public class BookingRepository : IRepository<BookingModel>
 {
     private readonly AppDbContext _dbContext;
-    private readonly Mapper _mapper;
 
     public BookingRepository(AppDbContext dbContext)
     {
         _dbContext = dbContext;
-       // _mapper = new Mapper();
     }
 
     public async Task<IEnumerable<BookingModel>> GetAllAsync()
