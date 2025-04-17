@@ -39,4 +39,16 @@ public class BasePage
             .Click();
         return new MainPage(Driver);
     }
+    protected void ScrollToElement(IWebElement element)
+    {
+        var jsExecutor = (IJavaScriptExecutor)Driver;
+        jsExecutor.ExecuteScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", element);
+    }
+
+    protected void ScrollToBottom()
+    {
+        var jsExecutor = (IJavaScriptExecutor)Driver;
+        jsExecutor.ExecuteScript("window.scrollBy(0, document.body.scrollHeight)");
+        Thread.Sleep(500);
+    }
 }

@@ -25,7 +25,7 @@ public class UserService : BaseService
         return await response.Content.ReadFromJsonAsync<UserModel>();
     }
 
-    public async Task<UserModel> EditUserAsync(int id, UserDto userDto)
+    public async Task<UserModel> EditUserAsync(int? id, UserDto userDto)
     {
         var response = await _httpClient.PutAsJsonAsync($"api/Users/{id}", userDto);
         return await response.Content.ReadFromJsonAsync<UserModel>();

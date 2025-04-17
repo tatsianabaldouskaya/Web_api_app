@@ -7,7 +7,7 @@ public class TestDbContext
 {
     public static AppDbContext CreateDbContext()
     {
-        var connectionString = "Server=(localdb)\\MSSQLLocalDB;Database=BookshopDb;Trusted_Connection=True;";
+        var connectionString = Config.DbConnectionString;
 
         var options = new DbContextOptionsBuilder<AppDbContext>()
             .UseSqlServer(connectionString)

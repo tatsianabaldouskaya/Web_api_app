@@ -18,7 +18,7 @@ else
                 <EditForm Model="dto" OnSubmit="SaveUser" FormName="editUserForm">
                     <div class="mb-3">
                         <label for="idInput" class="form-label">User Id</label>
-                        <InputNumber id="idInput" class="form-control" @bind-Value="" disabled />
+                        <InputNumber id="idInput" class="form-control" @bind-Value="Id" disabled />
                     </div>
                     <div class="mb-3">
                         <label for="nameInput" class="form-label">Name</label>

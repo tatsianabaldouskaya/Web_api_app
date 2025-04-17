@@ -5,6 +5,7 @@ public static class Config
 {
     private static Lazy<IConfiguration> _configuration = new(() =>
     {
+        var basePath = AppContext.BaseDirectory;
         return new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .Build();

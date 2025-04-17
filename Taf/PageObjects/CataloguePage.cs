@@ -45,17 +45,4 @@ public class CataloguePage : BasePage
             .FirstOrDefault(x => x.FindElement(_productName).Text.Trim().Equals(productName, StringComparison.OrdinalIgnoreCase));
         return product;
     }
-
-    private void ScrollToElement(IWebElement element)
-    {
-        var jsExecutor = (IJavaScriptExecutor)Driver;
-        jsExecutor.ExecuteScript("arguments[0].scrollIntoView({ behavior: 'smooth', block: 'center' });", element);
-    }
-
-    private void ScrollToBottom()
-    {
-        var jsExecutor = (IJavaScriptExecutor)Driver;
-        jsExecutor.ExecuteScript("window.scrollBy(0, document.body.scrollHeight)");
-        Thread.Sleep(500);
-    }
 }

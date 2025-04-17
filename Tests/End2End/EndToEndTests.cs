@@ -4,7 +4,7 @@ using OpenQA.Selenium;
 
 using Taf.Core;
 using Taf.Core.Utils;
-using Taf.Models;
+using Taf.Dtos;
 using Taf.PageObjects;
 
 using WebApplicationApi.Data;

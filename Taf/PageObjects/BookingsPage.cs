@@ -22,11 +22,4 @@ public class BookingsPage : BasePage
             .FirstOrDefault(x => x.FindElement(_productName).Text.Trim().Equals(productName, StringComparison.OrdinalIgnoreCase));
         return booking != null;
     }
-
-    private void ScrollToBottom()
-    {
-        var jsExecutor = (IJavaScriptExecutor)Driver;
-        jsExecutor.ExecuteScript("window.scrollBy(0, document.body.scrollHeight)");
-        Thread.Sleep(500);
-    }
 }

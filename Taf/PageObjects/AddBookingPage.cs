@@ -1,6 +1,5 @@
 ﻿using OpenQA.Selenium;
-
-using Taf.Models;
+using Taf.Dtos;
 
 namespace Taf.PageObjects;
 public class AddBookingPage : BasePage

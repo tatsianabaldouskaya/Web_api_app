@@ -17,7 +17,7 @@ public class ChromeWebDriver
 
             _driver.Manage().Cookies.DeleteAllCookies();
             _driver.Navigate().Refresh();
-            _driver.Navigate().GoToUrl("https://localhost:44388");
+            _driver.Navigate().GoToUrl(Config.BaseUrl);
             _driver.Manage().Window.Maximize();
             _driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
         }

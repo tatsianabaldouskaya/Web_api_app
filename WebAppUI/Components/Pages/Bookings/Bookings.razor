@@ -3,8 +3,7 @@
 @using WebAppUI.Services
 @using WebApplicationApi.Models.DataModels
 @using WebApplicationApi.Enums
-
-<h3>Bookings</h3>
+@inject AuthService AuthService
 
 @if (_bookings == null)
 {
@@ -12,6 +11,37 @@
 }
 else
 {
+    @if (AuthService.CurrentRole == Role.Manager)
+    {
+        <form class="container mb-4">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="userName" class="form-label">User Name</label>
+                    <input class="form-control" id="userName" type="search" name="UserName" />
+                </div>
+                <div class="col-md-6">
+                    <label for="productName" class="form-label">Product Name</label>
+                    <input class="form-control" id="productName" type="search" name="ProductName" />
+                </div>
+                <div class="col-md-6">
+                    <label for="date" class="form-label">Date</label>
+                    <input class="form-control" id="Date" type="search" name="Date" />
+                </div>
+                <div class="col-md-6">
+                    <label for="address" class="form-label">Address</label>
+                    <input class="form-control" id="address" type="search" name="Address" />
+                </div>
+                <div class="col-12 text-end mt-2">
+                    <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+        <h3>Search results</h3>
+    }
+    @if (AuthService.CurrentRole == Role.Customer)
+    {
+        <h3>My Bookings</h3>
+    }
     <div class="container-fluid text-center">
         <div class="row row-cols-1 row-cols-md-3 g-4">
             @foreach (var booking in _bookings)
@@ -25,17 +55,27 @@ else
                             <p class="card-text"><strong>Date:</strong> @booking.Date</p>
                             <p class="card-text"><strong>Delivery Address:</strong>@booking.DeliveryAddress</p>
                             <p class="card-text"><strong>Status:</strong> @((BookingStatus)booking.StatusId)</p>
-
                         </div>
-                        <div class="card-footer card-footer d-flex justify-content-between">
-                            <button class="btn btn-primary btn-sm"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editBookingModal"
-                                    onclick="populateModal(@booking.Id)">
-                                Edit
-                            </button>
-                            <button class="btn btn-danger btn-sm">Delete</button>
-                        </div>
+                        @if (AuthService.CurrentRole == Role.Customer)
+                        {
+                            <div class="card-footer card-footer d-flex justify-content-between">
+                                <button class="btn btn-primary btn-sm"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editBookingModal"
+                                        onclick="populateModal(@booking.Id)">
+                                    Edit
+                                </button>
+                                <button class="btn btn-danger btn-sm">Cancel</button>
+                            </div>
+                        }
+                        @if (AuthService.CurrentRole == Role.Manager)
+                        {
+                            <div class="card-footer card-footer d-flex justify-content-between">
+                                <button class="btn btn-success btn-sm">Approve</button>
+                                <button class="btn btn-danger btn-sm">Reject</button>
+                                <button class="btn btn-primary btn-sm">Close</button>
+                            </div>
+                        }
                     </div>
                 </div>
             }
@@ -70,6 +110,10 @@ else
     protected override async Task OnInitializedAsync()
     {
         _bookings = await BookingService.GetBookingsAsync();
+        if (AuthService.CurrentRole == Role.Customer)
+        {
+            _bookings = _bookings.Where(x => x.UserId == AuthService.UserId).ToList();
+        }
 
         foreach (var booking in _bookings)
         {

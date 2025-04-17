@@ -51,7 +51,8 @@ else
     </div>
 }
 
-
+@inject AuthService AuthService
+@inject UserService UserService
 @code {
 
     [Parameter]
@@ -67,6 +68,8 @@ else
     protected override async Task OnInitializedAsync()
     {
         product = await ProductService.GetProductByIdAsync(Id);
+        var userId = AuthService.UserId;
+        var user = await UserService.GetUserByIdAsync(userId);
         
         bookingDto = new BookingDto()
         {
@@ -77,8 +80,8 @@ else
             },
             User = new UserModel
             {
-                Id = 5,
-                Address = "GD"
+                Id = userId,
+                Address = user.Address
             },
             Date = DateTime.Today,
             Time = DateTime.Now,

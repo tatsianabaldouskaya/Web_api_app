@@ -1,4 +1,4 @@
-﻿namespace Taf.Models;
+﻿namespace Taf.Dtos;
 
 public class AddProductRequestDto
 {
