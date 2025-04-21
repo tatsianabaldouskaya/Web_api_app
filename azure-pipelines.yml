@@ -36,5 +36,5 @@ steps:
     displayName: 'Run Unit Tests'
     inputs:
       command: 'test'
-      projects: '**/*.Tests.csproj'
+      projects: '**/Tests.csproj'
       arguments: '--filter FullyQualifiedName~Tests.UnitTests'
