@@ -19,14 +19,22 @@ variables:
   SONAR_ORGANIZATION: 'your_org' 
 
 steps:
-- task: NuGetToolInstaller@1
+  - task: UseDotNet@2
+    displayName: 'Install SDK'
+    inputs:
+      version: '8.x'
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+  - checkout: self
 
+  - task: DotNetCoreCLI@2
+    displayName: 'Build the Project'
+    inputs:
+      command: 'build'
+      projects: '**/*.csproj'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
+  - task: DotNetCoreCLI@2
+    displayName: 'Run Unit Tests'
+    inputs:
+      command: 'test'
+      projects: '**/*.Tests.csproj'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests'
