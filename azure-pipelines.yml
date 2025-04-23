@@ -37,7 +37,7 @@ steps:
 
   - script: |
       dotnet tool install --global dotnet-sonarscanner
-      dotnet-sonarscanner begin /k:"$(SONAR_PROJECT_KEY)" /o:"$SONAR_ORG_KEY" /d:sonar.host.url="$(SONAR_HOST_URL)" /d:sonar.login="$SONAR_TOKEN"
+      dotnet-sonarscanner begin /k:"$(SONAR_PROJECT_KEY)" /o:"$(SONAR_ORG_KEY)" /d:sonar.host.url="$(SONAR_HOST_URL)" /d:sonar.login="$SONAR_TOKEN"
       dotnet build
       dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
     displayName: 'Sonar Scanner'
