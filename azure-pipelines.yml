@@ -43,7 +43,7 @@ steps:
     displayName: 'Install SonarCloud Scanner'
 
   - script: |
-      dotnet-sonarscanner begin /k:"Web_api_app" /o:"Tatsiana Baldouskaya" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="be74bd4289965b03893dbd9c3b19ce06457eb06c"
+      dotnet-sonarscanner begin /k:"Web_api_app" /o:"TatsianaBaldouskaya" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.login="be74bd4289965b03893dbd9c3b19ce06457eb06c"
     displayName: 'Prepare SonarCloud Analysis'
     env:
       SONAR_HOST_URL: $(SONAR_HOST_URL)
