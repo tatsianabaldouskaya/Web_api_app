@@ -46,4 +46,5 @@ steps:
       dotnet-sonarscanner begin /k:"Web_api_app" /o:"Tatsiana_Baldouskaya" /d:sonar.host.url=$(SONAR_HOST_URL) /d:sonar.login=$(SONAR_TOKEN)
     displayName: 'Prepare SonarCloud Analysis'
     env:
+      SONAR_HOST_URL: $(SONAR_HOST_URL)
       SONAR_TOKEN: $(SONAR_TOKEN)
