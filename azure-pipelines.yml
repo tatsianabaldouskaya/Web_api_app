@@ -48,3 +48,9 @@ steps:
     env:
       SONAR_HOST_URL: $(SONAR_HOST_URL)
       SONAR_TOKEN: $(SONAR_TOKEN)
+  
+  - script: |
+     dotnet build
+
+  - script: |
+     dotnet sonarscanner end /d:sonar.token="be74bd4289965b03893dbd9c3b19ce06457eb06c"
