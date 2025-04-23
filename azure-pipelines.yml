@@ -14,9 +14,8 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   variables:
-  SONAR_HOST_URL: 'https://sonarcloud.io'
-  SONAR_PROJECT_KEY: 'your_project_key'
-  SONAR_ORGANIZATION: 'your_org' 
+  SONAR_HOST_URL: $(SONAR_HOST_URL)
+  SONAR_TOKEN: $(SONAR_TOKEN)
 
 steps:
   - task: UseDotNet@2
@@ -38,3 +37,13 @@ steps:
       command: 'test'
       projects: '**/Tests.csproj'
       arguments: '--filter FullyQualifiedName~Tests.UnitTests'
+
+  - script: |
+      dotnet tool install --global dotnet-sonarscanner
+    displayName: 'Install SonarCloud Scanner'
+
+  - script: |
+      dotnet-sonarscanner begin /k:"Web_api_app" /o:"Tatsiana_Baldouskaya" /d:sonar.host.url=$(SONAR_HOST_URL) /d:sonar.login=$(SONAR_TOKEN)
+    displayName: 'Prepare SonarCloud Analysis'
+    env:
+      SONAR_TOKEN: $(SONAR_TOKEN)
