@@ -1,0 +1,49 @@
+pr:
+ branches:
+   include:
+     - main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  SONAR_HOST_URL: 'https://sonarcloud.io'
+  SONAR_PROJECT_KEY: 'tatsianabaldouskaya_Web_api_app'
+  SONAR_ORG_KEY: 'tatsianabaldouskaya-1'
+
+steps:
+  - task: UseDotNet@2
+    displayName: 'Install SDK'
+    inputs:
+      version: '8.x'
+
+  - checkout: self
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build the Project'
+    inputs:
+      command: 'build'
+      projects: '**/*.csproj'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Run Unit Tests'
+    inputs:
+      command: 'test'
+      projects: '**/Tests.csproj'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests'
+
+  - script: |
+      dotnet tool install --global dotnet-sonarscanner
+      dotnet-sonarscanner begin /k:"$(SONAR_PROJECT_KEY)" /o:"$(SONAR_ORG_KEY)" /d:sonar.host.url="$(SONAR_HOST_URL)" /d:sonar.login="$SONAR_TOKEN"
+      dotnet build
+      dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
+    displayName: 'Sonar Scanner'
+    env:
+      SONAR_TOKEN: $(SONAR_TOKEN)
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Run UI Tests'
+    inputs:
+      command: 'test'
+      projects: '**/Tests.csproj'
+      arguments: '--filter FullyQualifiedName~Tests.IntegrationTests'
