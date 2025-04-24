@@ -7,12 +7,11 @@ schedules:
     always: true
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 variables:
-  SONAR_HOST_URL: 'https://sonarcloud.io'
-  SONAR_PROJECT_KEY: 'tatsianabaldouskaya_Web_api_app'
-  SONAR_ORG_KEY: 'tatsianabaldouskaya-1'
+ UI_PORT: '44388'
+ API_PORT: '7203'
 
 steps:
   - task: UseDotNet@2
@@ -28,18 +27,28 @@ steps:
       command: 'build'
       projects: '**/*.csproj'
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Run Unit Tests'
+- task: DotNetCoreCLI@2
+    displayName: 'Publish the Application'
     inputs:
-      command: 'test'
-      projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.EndToEndTests'
+      command: 'publish'
+      projects: '**/*.sln'
+      arguments: '--configuration Release --output $(System.DefaultWorkingDirectory)/PublishedApp'
 
   - script: |
-      dotnet tool install --global dotnet-sonarscanner
-      dotnet-sonarscanner begin /k:"$(SONAR_PROJECT_KEY)" /o:"$(SONAR_ORG_KEY)" /d:sonar.host.url="$(SONAR_HOST_URL)" /d:sonar.login="$SONAR_TOKEN"
-      dotnet build
-      dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
-    displayName: 'Sonar Scanner'
-    env:
-      SONAR_TOKEN: $(SONAR_TOKEN)
+      echo "Starting the API application..."
+      cd $(System.DefaultWorkingDirectory)/PublishedApp
+      start /B dotnet $(System.DefaultWorkingDirectory)/PublishedApp/WebApplicationApi/WebApplicationApi.dll --urls=http://localhost:$(API_PORT)
+    displayName: 'Start the API Application'
+
+  # Step 8: Start the UI Application in the Background
+  - script: |
+      echo "Starting the UI application..."
+      cd $(System.DefaultWorkingDirectory)/PublishedApp
+      start /B dotnet $(System.DefaultWorkingDirectory)/PublishedApp/WebAppUI/WebAppUI.dll --urls=http://localhost:$(UI_PORT)
+    displayName: 'Start the UI Application'
+
+  - script: |
+      echo "Running UI tests..."
+      cd $(System.DefaultWorkingDirectory)/Tests # Example assuming UI tests are located in this path
+      dotnet test --filter FullyQualifiedName~EndToEndTests
+    displayName: 'Run UI Tests'
