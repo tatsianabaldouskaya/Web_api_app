@@ -11,6 +11,8 @@ variables:
   SONAR_PROJECT_KEY: 'tatsianabaldouskaya_Web_api_app'
   SONAR_ORG_KEY: 'tatsianabaldouskaya-1'
   COVERAGE_THRESHOLD: '80'
+  COVERAGE_FOLDER: '$(System.DefaultWorkingDirectory)/TestResults'
+  COVERAGE_FILE: '$(COVERAGE_FOLDER)/coverage.opencover.xml' 
 
 steps:
   - task: UseDotNet@2
@@ -31,7 +33,17 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.UnitTests'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests -configuration Release --collect:"XPlat Code Coverage" --logger trx --results-directory $(COVERAGE_FOLDER)'
+
+  - script: |
+      echo "Installing ReportGenerator..."
+      dotnet tool install --global dotnet-reportgenerator-globaltool
+
+      echo "Converting Coverage Report to OpenCover format for SonarCloud..."
+      reportgenerator -reports:$(COVERAGE_FOLDER)/**/*.coverage \
+        -targetdir:$(COVERAGE_FOLDER)/ConvertedCoverage \
+        -reporttypes:opencover
+    displayName: 'Convert Coverage Report to OpenCover XML'
 
   - script: |
           dotnet tool install --global dotnet-sonarscanner
@@ -46,4 +58,9 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.IntegrationTests'
+      arguments: '--filter FullyQualifiedName~Tests.IntegrationTests --logger trx --results-directory $(COVERAGE_FOLDER)'
+  
+  - task: PublishTestResults@2
+    displayName: 'Publish Test Results for Unit and Integration Tests'
+    inputs:
+      testResultsFiles: '**/*.trx'
