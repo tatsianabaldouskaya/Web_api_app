@@ -2,14 +2,14 @@ trigger:
 - main
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 variables:
   SONAR_HOST_URL: 'https://sonarcloud.io'
   SONAR_PROJECT_KEY: 'tatsianabaldouskaya_Web_api_app'
   SONAR_ORG_KEY: 'tatsianabaldouskaya-1'
   COVERAGE_FOLDER: '$(System.DefaultWorkingDirectory)/TestResults'
-  COVERAGE_FILE: '$(COVERAGE_FOLDER)/coverage.opencover.xml'
+  COVERAGE_FILE: '$(COVERAGE_FOLDER)/coverage.cobertura.xml'
 
 steps:
   - task: UseDotNet@2
@@ -26,8 +26,8 @@ steps:
       scannerMode: 'dotnet'
       projectKey: 'tatsianabaldouskaya_Web_api_app'
       extraProperties: |
-        sonar.cs.xunit.reportsPaths=**/test-results.trx
-        sonar.coverage.opencover.reportsPaths=**/coverage.cobertura.xml
+        sonar.cs.xunit.reportsPaths=$(COVERAGE_FOLDER)/test-results.trx
+        sonar.coverage.cobertura.reportPaths=$(COVERAGE_FILE)
   - task: DotNetCoreCLI@2
     displayName: 'Build the Project'
     inputs:
@@ -42,3 +42,4 @@ steps:
       arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test-results.trx"'
 
   - task: SonarCloudAnalyze@3
+  - task: SonarCloudPublish@3
