@@ -25,28 +25,24 @@ steps:
       command: 'build'
       projects: '**/*.csproj'
 
-  - script: |
-      dotnet tool install --global dotnet-sonarscanner
-      dotnet-sonarscanner begin /k:"$(SONAR_PROJECT_KEY)" /o:"$(SONAR_ORG_KEY)" /d:sonar.host.url="$(SONAR_HOST_URL)" /d:sonar.login="$SONAR_TOKEN"
-      dotnet build
-      dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
-    displayName: 'Sonar Scanner'
-    env:
-      SONAR_TOKEN: $(SONAR_TOKEN)
-    continueOnError: false
+  - task: SonarCloudPrepare@3
+    inputs:
+      SonarQube: 'sonarToken1'
+      organization: 'tatsianabaldouskaya-1'
+      scannerMode: 'dotnet'
+      projectKey: 'tatsianabaldouskaya_Web_api_app'
+
+  - task: SonarCloudAnalyze@3
+    inputs:
+      jdkversion: 'JAVA_HOME_17_X64'
+
+  - task: SonarCloudPublish@3
+    inputs:
+      pollingTimeoutSec: '300'
 
   - task: DotNetCoreCLI@2
     displayName: 'Run Unit Tests'
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.UnitTests --configuration Release --collect:"XPlat Code Coverage" --logger trx --results-directory $(COVERAGE_FOLDER)'
-  - script: |
-      echo "Installing ReportGenerator..."
-      dotnet tool install --global dotnet-reportgenerator-globaltool
-
-      echo "Converting Code Coverage Report..."
-      reportgenerator -reports:$(COVERAGE_FOLDER)/**/*.coverage \
-        -targetdir:$(COVERAGE_FOLDER)/ConvertedCoverage \
-        -reporttypes:opencover
-    displayName: 'Convert Coverage Report to OpenCover XML'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests'
