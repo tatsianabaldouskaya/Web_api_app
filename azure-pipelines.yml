@@ -31,17 +31,15 @@ steps:
       command: 'build'
       projects: '**/*.sln'
 
-  - task: SonarCloudAnalyze@3
-    inputs:
-      jdkversion: 'JAVA_HOME_17_X64'
-
-  - task: SonarCloudPublish@3
-    inputs:
-      pollingTimeoutSec: '300'
-
   - task: DotNetCoreCLI@2
     displayName: 'Run Unit Tests'
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
       arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect "Code coverage"'
+
+  - task: SonarCloudAnalyze@3
+
+  - task: SonarCloudPublish@3
+    inputs:
+      pollingTimeoutSec: '300'
