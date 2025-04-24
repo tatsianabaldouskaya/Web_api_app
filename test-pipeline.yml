@@ -31,7 +31,7 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.UnitTests -configuration Release --collect:"XPlat Code Coverage" --logger trx --results-directory $(COVERAGE_FOLDER)'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests'
 
   - script: |
       echo "Installing ReportGenerator..."
@@ -56,7 +56,7 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.IntegrationTests --logger trx --results-directory $(COVERAGE_FOLDER)'
+      arguments: '--filter FullyQualifiedName~Tests.IntegrationTests'
   
   - task: PublishTestResults@2
     displayName: 'Publish Test Results for Unit and Integration Tests'
