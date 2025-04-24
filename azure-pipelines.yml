@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 variables:
   SONAR_HOST_URL: 'https://sonarcloud.io'
@@ -42,7 +42,3 @@ steps:
       arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test-results.trx"'
 
   - task: SonarCloudAnalyze@3
-
-  - task: SonarCloudPublish@3
-    inputs:
-      pollingTimeoutSec: '300'
