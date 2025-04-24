@@ -30,17 +30,7 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test-results.trx"'
-
-  - script: |
-      echo "Installing ReportGenerator..."
-      dotnet tool install --global dotnet-reportgenerator-globaltool
-
-      echo "Converting Coverage Report to OpenCover format for SonarCloud..."
-      reportgenerator -reports:$(COVERAGE_FOLDER)/**/*.coverage \
-        -targetdir:$(COVERAGE_FOLDER)/ConvertedCoverage \
-        -reporttypes:opencover
-    displayName: 'Convert Coverage Report to OpenCover XML'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=unit-test-results.trx"'
 
   - script: |
           dotnet tool install --global dotnet-sonarscanner
@@ -55,7 +45,7 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.IntegrationTests'
+      arguments: '--filter FullyQualifiedName~Tests.IntegrationTests --logger:"trx;LogFileName=api-test-results.trx"'
   
   - task: PublishTestResults@2
     displayName: 'Publish Test Results'
