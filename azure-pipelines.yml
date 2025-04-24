@@ -1,27 +1,13 @@
-# ASP.NET
-# Build and test ASP.NET projects.
-# Add steps that publish symbols, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/apps/aspnet/build-aspnet-4
-
 trigger:
 - main
 
-pr:
- branches:
-   include:
-     - main
-
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 variables:
-  - group: SonarCloudSecrets
-  - name: SONAR_HOST_URL
-    value: 'https://sonarcloud.io'
-  - name: SONAR_PROJECT_KEY
-    value: 'tatsianabaldouskaya_Web_api_app'
-  - name: SONAR_ORG_KEY
-    value: 'tatsianabaldouskaya-1'
+  SONAR_HOST_URL: 'https://sonarcloud.io'
+  SONAR_PROJECT_KEY: 'tatsianabaldouskaya_Web_api_app'
+  SONAR_ORG_KEY: 'tatsianabaldouskaya-1'
 
 steps:
   - task: UseDotNet@2
@@ -37,13 +23,6 @@ steps:
       command: 'build'
       projects: '**/*.csproj'
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Run Unit Tests'
-    inputs:
-      command: 'test'
-      projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.UnitTests'
-
   - script: |
       dotnet tool install --global dotnet-sonarscanner
       dotnet-sonarscanner begin /k:"$(SONAR_PROJECT_KEY)" /o:"$(SONAR_ORG_KEY)" /d:sonar.host.url="$(SONAR_HOST_URL)" /d:sonar.login="$SONAR_TOKEN"
@@ -52,3 +31,16 @@ steps:
     displayName: 'Sonar Scanner'
     env:
       SONAR_TOKEN: $(SONAR_TOKEN)
+    continueOnError: false
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Run Unit Tests'
+    inputs:
+      command: 'test'
+      projects: '**/Tests.csproj'
+
+  - task: PublishTestResults@2
+    displayName: 'Publish Unit Tests Results'
+    inputs:
+      testResultsFiles: '$(System.DefaultWorkingDirectory)/TestResults/*.trx'
+      testRunTitle: 'Unit Test Results'
