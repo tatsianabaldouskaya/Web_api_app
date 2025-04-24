@@ -44,6 +44,8 @@ steps:
       command: 'build'
       projects: '**/*.sln'
 
+  - script: mkdir -p $(System.DefaultWorkingDirectory)/TestResults
+    displayName: 'Ensure TestResults Directory Exists'
   - task: DotNetCoreCLI@2
     displayName: 'Run Unit Tests'
     inputs:
