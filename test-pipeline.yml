@@ -8,7 +8,6 @@ variables:
   SONAR_HOST_URL: 'https://sonarcloud.io'
   SONAR_PROJECT_KEY: 'tatsianabaldouskaya_Web_api_app'
   SONAR_ORG_KEY: 'tatsianabaldouskaya-1'
-  COVERAGE_THRESHOLD: '80'
   COVERAGE_FOLDER: '$(System.DefaultWorkingDirectory)/TestResults'
   COVERAGE_FILE: '$(COVERAGE_FOLDER)/coverage.opencover.xml' 
 
@@ -31,12 +30,8 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage"'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test-results.trx"'
 
-  - script: |
-      echo "Debugging Coverage Directory..."
-      ls -R $(COVERAGE_FOLDER)
-    displayName: 'Debug Coverage Directory'
   - script: |
       echo "Installing ReportGenerator..."
       dotnet tool install --global dotnet-reportgenerator-globaltool
@@ -63,6 +58,6 @@ steps:
       arguments: '--filter FullyQualifiedName~Tests.IntegrationTests'
   
   - task: PublishTestResults@2
-    displayName: 'Publish Test Results for Unit and Integration Tests'
+    displayName: 'Publish Test Results'
     inputs:
       testResultsFiles: '**/*.trx'
