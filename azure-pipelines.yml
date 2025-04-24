@@ -15,9 +15,13 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  SONAR_HOST_URL: 'https://sonarcloud.io'
-  SONAR_PROJECT_KEY: 'tatsianabaldouskaya_Web_api_app'
-  SONAR_ORG_KEY: 'tatsianabaldouskaya-1'
+  - group: SonarCloudSecrets
+  - name: SONAR_HOST_URL
+    value: 'https://sonarcloud.io'
+  - name: SONAR_PROJECT_KEY
+    value: 'tatsianabaldouskaya_Web_api_app'
+  - name: SONAR_ORG_KEY
+    value: 'tatsianabaldouskaya-1'
 
 steps:
   - task: UseDotNet@2
