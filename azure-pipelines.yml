@@ -23,7 +23,7 @@ steps:
     displayName: 'Build the Project'
     inputs:
       command: 'build'
-      projects: '**/*.csproj'
+      projects: '**/*.sln'
 
   - task: SonarCloudPrepare@3
     inputs:
