@@ -10,6 +10,7 @@ variables:
   SONAR_HOST_URL: 'https://sonarcloud.io'
   SONAR_PROJECT_KEY: 'tatsianabaldouskaya_Web_api_app'
   SONAR_ORG_KEY: 'tatsianabaldouskaya-1'
+  COVERAGE_THRESHOLD: '80'
 
 steps:
   - task: UseDotNet@2
