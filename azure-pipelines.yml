@@ -31,6 +31,13 @@ steps:
         sonar.coverage.cobertura.reportPaths=$(COVERAGE_FILE)
         sonar.branch.name=main
         sonar.scanner.scanAll=false
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore Dependencies'
+    inputs:
+      command: 'restore'
+      projects: '**/*.sln'
+
   - task: DotNetCoreCLI@2
     displayName: 'Build the Project'
     inputs:
@@ -44,7 +51,7 @@ steps:
       projects: '**/Tests.csproj'
       arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test-results.trx"'
 
-  - script: dir $(System.DefaultWorkingDirectory)\TestResults
+  - script: ls $(System.DefaultWorkingDirectory)/TestResults
     displayName: 'Check Coverage Folder Contents'
 
   - task: SonarCloudAnalyze@3
