@@ -51,6 +51,11 @@ steps:
       projects: '**/Tests.csproj'
       arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test-results.trx"'
 
+  - task: PublishCodeCoverageResults@2
+    displayName: 'Publish Code Coverage Results'
+    inputs:
+      summaryFileLocation: '$(System.DefaultWorkingDirectory)/TestResults/coverage.cobertura.xml'
+
   - script: ls $(System.DefaultWorkingDirectory)/TestResults
     displayName: 'Check Coverage Folder Contents'
 
