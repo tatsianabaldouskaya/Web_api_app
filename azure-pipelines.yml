@@ -44,22 +44,17 @@ steps:
       command: 'build'
       projects: '**/*.sln'
 
-  - script: mkdir -p $(System.DefaultWorkingDirectory)/TestResults
-    displayName: 'Ensure TestResults Directory Exists'
   - task: DotNetCoreCLI@2
     displayName: 'Run Unit Tests'
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test-results.trx" --results-directory $(COVERAGE_FOLDER) --verbosity detailed'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test-results.trx"'
 
   - task: PublishCodeCoverageResults@2
     displayName: 'Publish Code Coverage Results'
     inputs:
       summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.cobertura.xml'
-
-  - script: ls -R $(System.DefaultWorkingDirectory)
-    displayName: 'Check Coverage Folder Contents'
 
   - task: SonarCloudAnalyze@3
   - task: SonarCloudPublish@3
