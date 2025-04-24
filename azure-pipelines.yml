@@ -51,14 +51,14 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test-results.trx" --results-directory $(COVERAGE_FOLDER)'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test-results.trx" --results-directory $(COVERAGE_FOLDER) --verbosity detailed'
 
   - task: PublishCodeCoverageResults@2
     displayName: 'Publish Code Coverage Results'
     inputs:
       summaryFileLocation: '$(System.DefaultWorkingDirectory)/TestResults/coverage.cobertura.xml'
 
-  - script: ls $(System.DefaultWorkingDirectory)/TestResults
+  - script: ls -R $(System.DefaultWorkingDirectory)
     displayName: 'Check Coverage Folder Contents'
 
   - task: SonarCloudAnalyze@3
