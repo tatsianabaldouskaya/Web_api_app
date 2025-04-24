@@ -4,7 +4,7 @@ pr:
      - main
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 variables:
   SONAR_HOST_URL: 'https://sonarcloud.io'
@@ -32,11 +32,7 @@ steps:
       projects: '**/Tests.csproj'
       arguments: '--filter FullyQualifiedName~Tests.UnitTests'
 
-  - task: PowerShell@2
-    displayName: 'Sonar Scanner with PowerShell'
-    inputs:
-      targetType: 'inline'
-      script: |
+  - script: |
           dotnet tool install --global dotnet-sonarscanner
           dotnet-sonarscanner begin /k:"$(SONAR_PROJECT_KEY)" /o:"$(SONAR_ORG_KEY)" /d:sonar.host.url="$(SONAR_HOST_URL)" /d:sonar.login="$SONAR_TOKEN"
           dotnet build
