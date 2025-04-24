@@ -32,24 +32,15 @@ steps:
       projects: '**/Tests.csproj'
       arguments: '--filter FullyQualifiedName~Tests.UnitTests'
 
-  - script: |
-      echo "Testing if SONAR_TOKEN is being passed..."
-      if [ -z "$SONAR_TOKEN" ]; then
-        echo "SONAR_TOKEN is EMPTY or NOT SET!"
-        exit 1
-      else
-        echo "SONAR_TOKEN appears to be passing (masked)! Value: $SONAR_TOKEN"
-      fi
-    displayName: 'Debug SONAR_TOKEN'
-    env:
-      SONAR_TOKEN: $(SONAR_TOKEN)
-
-  - script: |
-      dotnet tool install --global dotnet-sonarscanner
-      dotnet-sonarscanner begin /k:"$(SONAR_PROJECT_KEY)" /o:"$(SONAR_ORG_KEY)" /d:sonar.host.url="$(SONAR_HOST_URL)" /d:sonar.login="$SONAR_TOKEN"
-      dotnet build
-      dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
-    displayName: 'Sonar Scanner'
+  - task: PowerShell@2
+    displayName: 'Sonar Scanner with PowerShell'
+    inputs:
+      targetType: 'inline'
+      script: |
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet-sonarscanner begin /k:"$(SONAR_PROJECT_KEY)" /o:"$(SONAR_ORG_KEY)" /d:sonar.host.url="$(SONAR_HOST_URL)" /d:sonar.login="$SONAR_TOKEN"
+          dotnet build
+          dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
     env:
       SONAR_TOKEN: $(SONAR_TOKEN)
 
