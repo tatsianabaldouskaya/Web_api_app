@@ -34,6 +34,10 @@ steps:
       arguments: '--filter FullyQualifiedName~Tests.UnitTests'
 
   - script: |
+      echo "Debugging Coverage Directory..."
+      ls -R $(COVERAGE_FOLDER)
+    displayName: 'Debug Coverage Directory'
+  - script: |
       echo "Installing ReportGenerator..."
       dotnet tool install --global dotnet-reportgenerator-globaltool
 
