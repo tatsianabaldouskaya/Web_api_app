@@ -44,4 +44,4 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.UnitTests'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect "Code coverage"'
