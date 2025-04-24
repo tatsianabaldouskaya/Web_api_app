@@ -19,18 +19,17 @@ steps:
 
   - checkout: self
 
-  - task: DotNetCoreCLI@2
-    displayName: 'Build the Project'
-    inputs:
-      command: 'build'
-      projects: '**/*.sln'
-
   - task: SonarCloudPrepare@3
     inputs:
       SonarQube: 'sonarToken1'
       organization: 'tatsianabaldouskaya-1'
       scannerMode: 'dotnet'
       projectKey: 'tatsianabaldouskaya_Web_api_app'
+  - task: DotNetCoreCLI@2
+    displayName: 'Build the Project'
+    inputs:
+      command: 'build'
+      projects: '**/*.sln'
 
   - task: SonarCloudAnalyze@3
     inputs:
