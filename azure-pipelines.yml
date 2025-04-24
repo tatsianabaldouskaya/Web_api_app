@@ -8,7 +8,7 @@ variables:
   SONAR_HOST_URL: 'https://sonarcloud.io'
   SONAR_PROJECT_KEY: 'tatsianabaldouskaya_Web_api_app'
   SONAR_ORG_KEY: 'tatsianabaldouskaya-1'
-  COVERAGE_FOLDER: '$(System.DefaultWorkingDirectory)/TestResults'
+  COVERAGE_FOLDER: '$(System.DefaultWorkingDirectory)'
   COVERAGE_FILE: '$(COVERAGE_FOLDER)/coverage.cobertura.xml'
 
 steps:
@@ -56,7 +56,7 @@ steps:
   - task: PublishCodeCoverageResults@2
     displayName: 'Publish Code Coverage Results'
     inputs:
-      summaryFileLocation: '$(System.DefaultWorkingDirectory)/TestResults/coverage.cobertura.xml'
+      summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.cobertura.xml'
 
   - script: ls -R $(System.DefaultWorkingDirectory)
     displayName: 'Check Coverage Folder Contents'
