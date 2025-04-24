@@ -29,7 +29,6 @@ steps:
       extraProperties: |
         sonar.cs.xunit.reportsPaths=$(COVERAGE_FOLDER)/test-results.trx
         sonar.coverage.cobertura.reportPaths=$(COVERAGE_FILE)
-        sonar.branch.name=main
         sonar.scanner.scanAll=false
 
   - task: DotNetCoreCLI@2
