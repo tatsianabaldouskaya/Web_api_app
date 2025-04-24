@@ -31,7 +31,7 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.UnitTests'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage"'
 
   - script: |
       echo "Debugging Coverage Directory..."
