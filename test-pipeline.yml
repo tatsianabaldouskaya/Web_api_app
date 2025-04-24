@@ -71,4 +71,12 @@ steps:
     displayName: 'Publish Test Results'
     inputs:
       testResultsFiles: '**/*.trx'
+      searchFolder: '$(System.DefaultWorkingDirectory)'
       failTaskOnFailedTests: true
+  
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Test Results as Artifact'
+    inputs:
+      targetPath: '$(System.DefaultWorkingDirectory)'
+      artifact: 'TestResults'
+      publishLocation: 'pipeline'
