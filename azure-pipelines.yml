@@ -44,6 +44,9 @@ steps:
       projects: '**/Tests.csproj'
       arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test-results.trx"'
 
+  - script: dir $(System.DefaultWorkingDirectory)\TestResults
+    displayName: 'Check Coverage Folder Contents'
+
   - task: SonarCloudAnalyze@3
   - task: SonarCloudPublish@3
     inputs:
