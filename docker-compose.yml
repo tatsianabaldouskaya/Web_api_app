@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  ui:
+    build:
+      context: .
+      dockerfile: WebAppUI/Dockerfile 
+    ports:
+      - "7055:8091"  # Expose port 8091 of the container to port 7055 on the host machine
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      - api  # Ensure API is running before UI starts
+
+  api:
+    build:
+      context: .
+      dockerfile: WebApplicationApi/Dockerfile
+    ports:
+      - "7203:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_USER: myuser
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
