@@ -28,7 +28,7 @@ steps:
       projectKey: 'tatsianabaldouskaya_Web_api_app'
       extraProperties: |
         sonar.cs.xunit.reportsPaths=$(Build.SourcesDirectory)/test-results.trx
-        sonar.coverage.cobertura.reportPaths=$(Build.SourcesDirectory)/CoverageReport/Cobertura.xml
+        sonar.coverage.cobertura.reportPaths=$(Build.SourcesDirectory)/Cobertura.xml
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore Dependencies'
@@ -55,9 +55,14 @@ steps:
   - script: |
       reportgenerator \
         -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml \
-        -targetdir:$(Build.SourcesDirectory)/CoverageReport \
+        -targetdir:$(Build.SourcesDirectory) \
         -reporttypes:Cobertura
     displayName: 'Generate Cobertura Coverage Report'
+
+  - task: PublishCodeCoverageResults@2
+    displayName: 'Publish Code Coverage to Azure DevOps'
+    inputs:
+      summaryFileLocation: '$(Build.SourcesDirectory)/Cobertura.xml'
 
   - task: SonarCloudAnalyze@3
   - task: SonarCloudPublish@3
