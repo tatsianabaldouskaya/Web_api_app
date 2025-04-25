@@ -30,6 +30,7 @@ steps:
         sonar.cs.xunit.reportsPaths=$(COVERAGE_FOLDER)/test-results.trx
         sonar.coverage.cobertura.reportPaths=$(COVERAGE_FILE)
         sonar.scanner.scanAll=false
+        sonar.branch.name=main
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore Dependencies'
@@ -65,8 +66,15 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.IntegrationTests --logger:"trx;LogFileName=api-test-results.trx"'
-  
+      arguments: '--filter FullyQualifiedName~Tests.IntegrationTests --logger trx --results-directory $(Build.ArtifactStagingDirectory)/TestResults'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Test Results as Artifact'
+    inputs:
+      artifactName: 'TestResults'
+      publishLocation: 'Container'
+      targetPath: '$(Build.ArtifactStagingDirectory)/TestResults'
+
   - task: PublishTestResults@2
     displayName: 'Publish Test Results'
     inputs:
