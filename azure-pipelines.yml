@@ -29,6 +29,8 @@ steps:
       extraProperties: |
         sonar.cs.xunit.reportsPaths=$(Build.SourcesDirectory)/test-results.trx
         sonar.coverage.cobertura.reportPaths=$(Build.SourcesDirectory)/Cobertura.xml
+        sonar.scanner.scanAll=false
+        sonar.branch.name=$(Build.SourceBranchName)
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore Dependencies'
