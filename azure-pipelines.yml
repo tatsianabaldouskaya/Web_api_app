@@ -27,8 +27,8 @@ steps:
       scannerMode: 'dotnet'
       projectKey: 'tatsianabaldouskaya_Web_api_app'
       extraProperties: |
-        sonar.cs.xunit.reportsPaths=$(COVERAGE_FOLDER)/test-results.trx
-        sonar.coverage.cobertura.reportPaths=$(COVERAGE_FILE)
+        sonar.cs.xunit.reportsPaths=$(Build.SourcesDirectory)/test-results.trx
+        sonar.coverage.cobertura.reportPaths=$(Build.SourcesDirectory)/CoverageReport/Cobertura.xml
         sonar.scanner.scanAll=false
 
   - task: DotNetCoreCLI@2
@@ -50,10 +50,15 @@ steps:
       projects: '**/Tests.csproj'
       arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test-results.trx"'
 
-  - task: PublishCodeCoverageResults@2
-    displayName: 'Publish Code Coverage Results'
-    inputs:
-      summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.cobertura.xml'
+  - script: dotnet tool install -g dotnet-reportgenerator-globaltool
+    displayName: 'Install ReportGenerator'
+
+  - script: |
+      reportgenerator \
+        -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml \
+        -targetdir:$(Build.SourcesDirectory)/CoverageReport \
+        -reporttypes:Cobertura
+    displayName: 'Generate Cobertura Coverage Report'
 
   - task: SonarCloudAnalyze@3
   - task: SonarCloudPublish@3
