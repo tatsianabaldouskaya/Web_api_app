@@ -11,8 +11,13 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["WebAppUI/WebAppUI.csproj", "WebAppUI/"]
 COPY ["WebApplicationApi/WebApplicationApi.csproj", "WebApplicationApi/"]
+
 RUN dotnet restore "./WebAppUI/./WebAppUI.csproj"
-COPY . .
+RUN dotnet restore "./WebApplicationApi/WebApplicationApi.csproj"
+
+COPY WebAppUI/. ./WebAppUI/
+COPY WebApplicationApi/. ./WebApplicationApi/
+
 WORKDIR "/src/WebAppUI"
 RUN dotnet build "./WebAppUI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
@@ -23,4 +28,11 @@ RUN dotnet publish "./WebAppUI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+COPY ["./localhost.pfx", "/https/localhost.pfx"]
+
+# Environment variable for the HTTPS certificate
+ENV ASPNETCORE_Kestrel__Certificates__Default__Password="123456"
+ENV ASPNETCORE_Kestrel__Certificates__Default__Path="/https/localhost.pfx"
+
 ENTRYPOINT ["dotnet", "WebAppUI.dll"]

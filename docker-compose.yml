@@ -6,9 +6,10 @@ services:
       context: .
       dockerfile: WebAppUI/Dockerfile 
     ports:
-      - "7055:8091"  # Expose port 8091 of the container to port 7055 on the host machine
+      - "5256:8090"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8090
     depends_on:
       - api  # Ensure API is running before UI starts
 
@@ -17,13 +18,13 @@ services:
       context: .
       dockerfile: WebApplicationApi/Dockerfile
     ports:
-      - "7203:8081"
+      - "5062:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:8081
-      - ConnectionStrings__BookshopDatabase=Server=db;Database=BookshopDb;User=sa;Password=My_password123;
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__BookshopDatabase=Server=db;Database=BookshopDb;User=sa;Password=My_password123;TrustServerCertificate=True
     depends_on:
-      - db 
+      - db
 
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
