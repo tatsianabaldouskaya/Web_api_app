@@ -7,12 +7,14 @@ schedules:
     always: true
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 variables:
-  SONAR_HOST_URL: 'https://sonarcloud.io'
-  SONAR_PROJECT_KEY: 'tatsianabaldouskaya_Web_api_app'
-  SONAR_ORG_KEY: 'tatsianabaldouskaya-1'
+  buildConfiguration: 'Release'
+  dockerRegistry: 'your-registry.azurecr.io'
+  dockerImageName: 'your-image-name'
+  containerNameApi: 'your-api-container'
+  containerNameUi: 'your-ui-container'
 
 steps:
   - task: UseDotNet@2
@@ -23,23 +25,46 @@ steps:
   - checkout: self
 
   - task: DotNetCoreCLI@2
+    displayName: 'Restore Dependencies'
+    inputs:
+      command: 'restore'
+      projects: '**/*.sln'
+  - task: DotNetCoreCLI@2
     displayName: 'Build the Project'
     inputs:
       command: 'build'
       projects: '**/*.csproj'
 
+  - script: |
+      podman build -t $(dockerRegistry)/$(dockerImageName):$(Build.BuildId) .
+    displayName: 'Build Docker Image using Podman'
+
+  - script: |
+      podman login $(dockerRegistry) --username $(dockerUsername) --password $(dockerPassword)
+      podman push $(dockerRegistry)/$(dockerImageName):$(Build.BuildId)
+    displayName: 'Push Docker Image to Registry'
+
+  - script: |
+      podman run -d --name $(containerNameApi) $(dockerRegistry)/$(dockerImageName):$(Build.BuildId) dotnet $(pwd)/Api/Api.dll
+
+      podman run -d --name $(containerNameUi) $(dockerRegistry)/$(dockerImageName):$(Build.BuildId) dotnet $(pwd)/UI/UI.dll
+    displayName: 'Run API and UI containers in background'
+
   - task: DotNetCoreCLI@2
-    displayName: 'Run Unit Tests'
+    displayName: 'Run Tests'
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.EndToEndTests'
+      arguments: '--filter FullyQualifiedName~End2End --logger trx --results-directory $(Build.ArtifactStagingDirectory)/TestResults'
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Test Results as Artifact'
+    inputs:
+      artifactName: 'TestResults'
+      publishLocation: 'Container'
+      targetPath: '$(Build.ArtifactStagingDirectory)/TestResults'
 
   - script: |
-      dotnet tool install --global dotnet-sonarscanner
-      dotnet-sonarscanner begin /k:"$(SONAR_PROJECT_KEY)" /o:"$(SONAR_ORG_KEY)" /d:sonar.host.url="$(SONAR_HOST_URL)" /d:sonar.login="$SONAR_TOKEN"
-      dotnet build
-      dotnet sonarscanner end /d:sonar.token="$SONAR_TOKEN"
-    displayName: 'Sonar Scanner'
-    env:
-      SONAR_TOKEN: $(SONAR_TOKEN)
+      podman stop $(containerNameApi) && podman rm $(containerNameApi)
+      podman stop $(containerNameUi) && podman rm $(containerNameUi)
+    displayName: 'Stop and Remove Containers'

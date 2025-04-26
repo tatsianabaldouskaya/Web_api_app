@@ -8,7 +8,7 @@ variables:
   SONAR_HOST_URL: 'https://sonarcloud.io'
   SONAR_PROJECT_KEY: 'tatsianabaldouskaya_Web_api_app'
   SONAR_ORG_KEY: 'tatsianabaldouskaya-1'
-  COVERAGE_FOLDER: '$(System.DefaultWorkingDirectory)/TestResults'
+  COVERAGE_FOLDER: '$(System.DefaultWorkingDirectory)'
   COVERAGE_FILE: '$(COVERAGE_FOLDER)/coverage.cobertura.xml'
 
 steps:
@@ -27,10 +27,17 @@ steps:
       scannerMode: 'dotnet'
       projectKey: 'tatsianabaldouskaya_Web_api_app'
       extraProperties: |
-        sonar.cs.xunit.reportsPaths=$(COVERAGE_FOLDER)/test-results.trx
-        sonar.coverage.cobertura.reportPaths=$(COVERAGE_FILE)
-        sonar.branch.name=main
+        sonar.cs.xunit.reportsPaths=$(Build.SourcesDirectory)/test-results.trx
+        sonar.coverage.cobertura.reportPaths=$(Build.SourcesDirectory)/Cobertura.xml
         sonar.scanner.scanAll=false
+        sonar.branch.name=main
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore Dependencies'
+    inputs:
+      command: 'restore'
+      projects: '**/*.sln'
+
   - task: DotNetCoreCLI@2
     displayName: 'Build the Project'
     inputs:
@@ -44,8 +51,20 @@ steps:
       projects: '**/Tests.csproj'
       arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test-results.trx"'
 
-  - script: dir $(System.DefaultWorkingDirectory)\TestResults
-    displayName: 'Check Coverage Folder Contents'
+  - script: dotnet tool install -g dotnet-reportgenerator-globaltool
+    displayName: 'Install ReportGenerator'
+
+  - script: |
+      reportgenerator \
+        -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml \
+        -targetdir:$(Build.SourcesDirectory) \
+        -reporttypes:Cobertura
+    displayName: 'Generate Cobertura Coverage Report'
+
+  - task: PublishCodeCoverageResults@2
+    displayName: 'Publish Code Coverage to Azure DevOps'
+    inputs:
+      summaryFileLocation: '$(Build.SourcesDirectory)/Cobertura.xml'
 
   - task: SonarCloudAnalyze@3
   - task: SonarCloudPublish@3
