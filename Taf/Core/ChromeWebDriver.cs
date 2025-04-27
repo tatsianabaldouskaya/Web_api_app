@@ -12,7 +12,7 @@ public class ChromeWebDriver
     public static IWebDriver InitializeDriver()
     {
         var chromeOptions = new ChromeOptions();
-        //chromeOptions.AddArguments("--headless");
+        chromeOptions.AddArguments("--headless");
         chromeOptions.AddArguments("--no-sandbox");
         chromeOptions.AddArguments("--disable-dev-shm-usage");
 
