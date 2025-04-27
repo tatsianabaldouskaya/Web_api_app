@@ -41,6 +41,7 @@ steps:
       dockerComposeFile: '**/docker-compose.yml'
       action: 'Run a Docker Compose command'
       dockerComposeCommand: 'build'
+      projectName: 'web_api_app'
 
   - task: DockerCompose@1
     displayName: Push Docker Images
