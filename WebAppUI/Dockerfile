@@ -28,11 +28,4 @@ RUN dotnet publish "./WebAppUI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-
-COPY ["./localhost.pfx", "/https/localhost.pfx"]
-
-# Environment variable for the HTTPS certificate
-ENV ASPNETCORE_Kestrel__Certificates__Default__Password="123456"
-ENV ASPNETCORE_Kestrel__Certificates__Default__Path="/https/localhost.pfx"
-
 ENTRYPOINT ["dotnet", "WebAppUI.dll"]
