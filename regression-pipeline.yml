@@ -1,3 +1,5 @@
+trigger: none
+
 schedules:
   - cron: "0 8 * * *"
     displayName: "Daily Schedule"
@@ -35,20 +37,12 @@ steps:
       command: 'build'
       projects: '**/*.csproj'
 
-  - script: |
-      podman build -t $(dockerRegistry)/$(dockerImageName):$(Build.BuildId) .
-    displayName: 'Build Docker Image using Podman'
-
-  - script: |
-      podman login $(dockerRegistry) --username $(dockerUsername) --password $(dockerPassword)
-      podman push $(dockerRegistry)/$(dockerImageName):$(Build.BuildId)
-    displayName: 'Push Docker Image to Registry'
-
-  - script: |
-      podman run -d --name $(containerNameApi) $(dockerRegistry)/$(dockerImageName):$(Build.BuildId) dotnet $(pwd)/Api/Api.dll
-
-      podman run -d --name $(containerNameUi) $(dockerRegistry)/$(dockerImageName):$(Build.BuildId) dotnet $(pwd)/UI/UI.dll
-    displayName: 'Run API and UI containers in background'
+  - task: DockerCompose@1
+    inputs:
+      containerregistrytype: 'Container Registry'
+      dockerComposeFile: '**/docker-compose.yml'
+      action: 'Run a Docker Compose command'
+      dockerComposeCommand: 'up -d'
 
   - task: DotNetCoreCLI@2
     displayName: 'Run Tests'
@@ -64,7 +58,9 @@ steps:
       publishLocation: 'Container'
       targetPath: '$(Build.ArtifactStagingDirectory)/TestResults'
 
-  - script: |
-      podman stop $(containerNameApi) && podman rm $(containerNameApi)
-      podman stop $(containerNameUi) && podman rm $(containerNameUi)
-    displayName: 'Stop and Remove Containers'
+  - task: DockerCompose@1
+    displayName: 'Stop Docker Containers'
+    inputs:
+      containerregistrytype: 'Container Registry'
+      dockerComposeFile: '**/docker-compose.yml'
+      dockerComposeCommand: 'down'
