@@ -48,7 +48,7 @@ steps:
       containerregistrytype: 'Azure Container Registry'
       azureSubscription: 'Tatsiana_VS_personal_subscription(69e0488f-40aa-42cb-9421-d421d30469da)'
       dockerComposeFile: '**/docker-compose.yml'
-      azureContainerRegistry: $(ACR_NAME)
+      azureContainerRegistry: '{"loginServer":"bookshop123.azurecr.io", "id" : "/subscriptions/69e0488f-40aa-42cb-9421-d421d30469da/resourceGroups/rg-web-app/providers/Microsoft.ContainerRegistry/registries/bookshop123"}'
       projectName: $(PROJECT_NAME)
       action: 'Run a Docker Compose command'
       dockerComposeCommand: 'push'
