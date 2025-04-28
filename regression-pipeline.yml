@@ -25,6 +25,14 @@ steps:
 
   - checkout: self
 
+  - task: AzureCLI@2
+    displayName: Authenticate to Azure Container Registry
+    inputs:
+      azureSubscription: 'Tatsiana_VS_personal_subscription(69e0488f-40aa-42cb-9421-d421d30469da)' 
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az acr login --name $(ACR_NAME)
   - task: DockerCompose@1
     inputs:
       containerregistrytype: 'Azure Container Registry'
