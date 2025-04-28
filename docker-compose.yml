@@ -3,18 +3,20 @@ services:
     build:
       context: .
       dockerfile: WebAppUI/Dockerfile 
+    image: bookshop123.azurecr.io/web_ui_app:latest
     ports:
       - "5256:8090"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8090
     depends_on:
-      - api  # Ensure API is running before UI starts
+      - api
 
   api:
     build:
       context: .
       dockerfile: WebApplicationApi/Dockerfile
+    image: bookshop123.azurecr.io/web_api_app:latest
     ports:
       - "5062:8080"
     environment:
