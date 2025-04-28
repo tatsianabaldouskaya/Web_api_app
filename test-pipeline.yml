@@ -68,7 +68,7 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.IntegrationTests --logger:"trx;LogFileName=apitest-results.trx" --results-directory $(System.DefaultWorkingDirectory)/TestResults'
+      arguments: '--filter FullyQualifiedName~Tests.IntegrationTests --logger:"trx;LogFileName=$(System.DefaultWorkingDirectory)/TestResults/apitest-results.trx"'
 
   - task: PublishTestResults@2
     displayName: 'Publish Test Results'
