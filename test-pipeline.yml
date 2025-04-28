@@ -70,13 +70,6 @@ steps:
       projects: '**/Tests.csproj'
       arguments: '--filter FullyQualifiedName~Tests.IntegrationTests --logger:"trx;LogFileName=apitest-results.trx"'
 
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish Test Results as Artifact'
-    inputs:
-      artifactName: 'TestResults'
-      publishLocation: 'Container'
-      targetPath: '$(Build.ArtifactStagingDirectory)/TestResults'
-
   - task: PublishTestResults@2
     displayName: 'Publish Test Results'
     inputs:
