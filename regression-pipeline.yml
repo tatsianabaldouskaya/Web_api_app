@@ -16,6 +16,7 @@ variables:
   ACR_NAME: 'bookshop123'
   ACR_URL: '$(ACR_NAME).azurecr.io'
   PROJECT_NAME: 'web_app'
+  AZURE_SUBSCRIPTION: 'Tatsiana_VS_personal_subscription(69e0488f-40aa-42cb-9421-d421d30469da)'
 
 steps:
   - task: UseDotNet@2
@@ -28,7 +29,7 @@ steps:
   - task: AzureCLI@2
     displayName: Authenticate to Azure Container Registry
     inputs:
-      azureSubscription: 'Tatsiana_VS_personal_subscription(69e0488f-40aa-42cb-9421-d421d30469da)' 
+      azureSubscription: $(AZURE_SUBSCRIPTION)
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
@@ -36,7 +37,7 @@ steps:
   - task: DockerCompose@1
     inputs:
       containerregistrytype: 'Azure Container Registry'
-      azureSubscription: 'Tatsiana_VS_personal_subscription(69e0488f-40aa-42cb-9421-d421d30469da)'
+      azureSubscription: $(AZURE_SUBSCRIPTION)
       dockerComposeFile: '**/docker-compose.yml'
       azureContainerRegistry: $(ACR_NAME)
       projectName: $(PROJECT_NAME)
@@ -46,7 +47,7 @@ steps:
   - task: DockerCompose@1
     inputs:
       containerregistrytype: 'Azure Container Registry'
-      azureSubscription: 'Tatsiana_VS_personal_subscription(69e0488f-40aa-42cb-9421-d421d30469da)'
+      azureSubscription: $(AZURE_SUBSCRIPTION)
       dockerComposeFile: '**/docker-compose.yml'
       azureContainerRegistry: '{"loginServer":"bookshop123.azurecr.io", "id" : "/subscriptions/69e0488f-40aa-42cb-9421-d421d30469da/resourceGroups/rg-web-app/providers/Microsoft.ContainerRegistry/registries/bookshop123"}'
       projectName: $(PROJECT_NAME)
@@ -56,7 +57,7 @@ steps:
   - task: DockerCompose@1
     inputs:
       containerregistrytype: 'Azure Container Registry'
-      azureSubscription: 'Tatsiana_VS_personal_subscription(69e0488f-40aa-42cb-9421-d421d30469da)'
+      azureSubscription: $(AZURE_SUBSCRIPTION)
       dockerComposeFile: '**/docker-compose.yml'
       azureContainerRegistry: $(ACR_NAME)
       projectName: $(PROJECT_NAME)
@@ -76,3 +77,13 @@ steps:
       artifactName: 'TestResults'
       publishLocation: 'Container'
       targetPath: '$(Build.ArtifactStagingDirectory)/TestResults'
+
+  - task: DockerCompose@1
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscription: $(AZURE_SUBSCRIPTION)
+      dockerComposeFile: '**/docker-compose.yml'
+      azureContainerRegistry: $(ACR_NAME)
+      projectName: $(PROJECT_NAME)
+      action: 'Run a Docker Compose command'
+      dockerComposeCommand: 'down'
