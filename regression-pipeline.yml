@@ -69,14 +69,14 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~End2End'
+      arguments: '--filter FullyQualifiedName~End2End --logger:"trx;LogFileName=$(System.DefaultWorkingDirectory)/TestResults/ui-test-results.trx"'
 
-  - task: PublishBuildArtifacts@1
+  - task: PublishPipelineArtifact@1
     displayName: 'Publish Test Results as Artifact'
     inputs:
-      artifactName: 'TestResults'
-      publishLocation: 'Container'
-      targetPath: '$(Build.ArtifactStagingDirectory)/TestResults'
+      targetPath: '$(System.DefaultWorkingDirectory)/TestResults'
+      artifact: 'TestResults'
+      publishLocation: 'pipeline'
 
   - task: DockerCompose@1
     inputs:
