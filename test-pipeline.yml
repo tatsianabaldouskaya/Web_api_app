@@ -51,7 +51,7 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage"'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=$(System.DefaultWorkingDirectory)/unittest-results.trx"'
 
   - task: PublishCodeCoverageResults@2
     displayName: 'Publish Code Coverage Results'
@@ -73,6 +73,6 @@ steps:
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Test Results as Artifact'
     inputs:
-      targetPath: '$(System.DefaultWorkingDirectory)/apitest-results.trx'
+      targetPath: '$(System.DefaultWorkingDirectory)/TestResults'
       artifact: 'TestResults'
       publishLocation: 'pipeline'
