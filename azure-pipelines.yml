@@ -23,23 +23,23 @@ steps:
   - checkout: self
     fetchDepth: 0 
 
-  - task: SonarCloudPrepare@3
-    inputs:
-      SonarQube: 'sonarToken1'
-      organization: 'tatsianabaldouskaya-1'
-      scannerMode: 'dotnet'
-      projectKey: 'tatsianabaldouskaya_Web_api_app'
-      extraProperties: |
-        sonar.cs.xunit.reportsPaths=$(Build.SourcesDirectory)/test-results.trx
-        sonar.coverage.cobertura.reportPaths=$(Build.SourcesDirectory)/Cobertura.xml
-        sonar.scanner.scanAll=false
-        sonar.branch.name=main
-
   - task: DotNetCoreCLI@2
     displayName: 'Restore Dependencies'
     inputs:
       command: 'restore'
       projects: '**/*.sln'
+
+  - task: SonarCloudPrepare@3
+    inputs:
+      SonarQube: 'sonarToken1'
+      organization: 'tatsianabaldouskaya-1'
+      scannerMode: 'dotnet'
+      projectKey: $(SONAR_PROJECT_KEY)
+      extraProperties: |
+        sonar.cs.xunit.reportsPaths=$(Build.SourcesDirectory)/test-results.trx
+        sonar.coverage.cobertura.reportPaths=$(Build.SourcesDirectory)/Cobertura.xml
+        sonar.scanner.scanAll=false
+        sonar.branch.name=main
 
   - task: DotNetCoreCLI@2
     displayName: 'Build the Project'
@@ -52,7 +52,7 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=test-results.trx"'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect "Code Coverage" --logger:"trx;LogFileName=test-results.trx"'
 
   - script: dotnet tool install -g dotnet-reportgenerator-globaltool
     displayName: 'Install ReportGenerator'
