@@ -51,12 +51,12 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=$(System.DefaultWorkingDirectory)/TestResults/unittest-results.trx"'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=$(System.DefaultWorkingDirectory)/unittest-results.trx"'
 
   - task: PublishCodeCoverageResults@2
     displayName: 'Publish Code Coverage Results'
     inputs:
-      summaryFileLocation: '$(System.DefaultWorkingDirectory)/TestResults/coverage.cobertura.xml'
+      summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.cobertura.xml'
 
   - task: SonarCloudAnalyze@3
   - task: SonarCloudPublish@3
@@ -68,7 +68,7 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.IntegrationTests --logger:"trx;LogFileName=$(System.DefaultWorkingDirectory)/TestResults/apitest-results.trx"'
+      arguments: '--filter FullyQualifiedName~Tests.IntegrationTests --logger:"trx;LogFileName=$(System.DefaultWorkingDirectory)/apitest-results.trx"'
 
   - task: PublishTestResults@2
     displayName: 'Publish Test Results'
@@ -80,6 +80,6 @@ steps:
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Test Results as Artifact'
     inputs:
-      targetPath: '$(System.DefaultWorkingDirectory)/TestResults'
+      targetPath: '$(System.DefaultWorkingDirectory)/apitest-results.trx'
       artifact: 'TestResults'
       publishLocation: 'pipeline'
