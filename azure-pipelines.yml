@@ -39,6 +39,7 @@ steps:
         sonar.sources=$(Build.SourcesDirectory)/WebAppUI,$(Build.SourcesDirectory)/WebApplicationApi
         sonar.tests=$(Build.SourcesDirectory)/Tests
         sonar.coverage.exclusions=**/obj/**,**/bin/**
+        sonar.exclusions=$(Build.SourcesDirectory)/WebAppUI/Config.cs,$(Build.SourcesDirectory)/Tests/**,$(Build.SourcesDirectory)/Taf/**
         sonar.cs.xunit.reportsPaths=$(Build.SourcesDirectory)/test-results.trx
         sonar.coverage.cobertura.reportPaths=$(COVERAGE_FILE)
         sonar.scanner.scanAll=false
