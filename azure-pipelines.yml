@@ -38,8 +38,8 @@ steps:
       extraProperties: |
         sonar.sources=$(Build.SourcesDirectory)/WebAppUI,$(Build.SourcesDirectory)/WebApplicationApi
         sonar.tests=$(Build.SourcesDirectory)/Tests
-        sonar.coverage.exclusions=**/*.csproj,**/*.dll,**/*.exe
-        sonar.exclusions=$(Build.SourcesDirectory)/WebAppUI/Config.cs,$(Build.SourcesDirectory)/Tests/**,$(Build.SourcesDirectory)/Taf/**
+        sonar.exclusions=$(Build.SourcesDirectory)/Tests/**,$(Build.SourcesDirectory)/Taf/**
+        sonar.coverage.exclusions=$(Build.SourcesDirectory)/Taf/**,**/bin/*,**/obj/**,**/*.generated.cs,**/*.csproj
         sonar.cs.xunit.reportsPaths=$(Build.SourcesDirectory)/test-results.trx
         sonar.coverage.cobertura.reportPaths=$(COVERAGE_FILE)
         sonar.scanner.scanAll=false
