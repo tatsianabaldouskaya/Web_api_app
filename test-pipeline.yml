@@ -65,9 +65,9 @@ steps:
     displayName: 'Generate Cobertura Coverage Report'
 
   - task: PublishCodeCoverageResults@2
-    displayName: 'Publish Code Coverage Results'
+    displayName: 'Publish Code Coverage to Azure DevOps'
     inputs:
-      summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.cobertura.xml'
+      summaryFileLocation: '$(Build.SourcesDirectory)/Cobertura.xml'
 
   - task: SonarCloudAnalyze@3
   - task: SonarCloudPublish@3
