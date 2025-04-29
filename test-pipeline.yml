@@ -49,6 +49,7 @@ steps:
 
   - task: DotNetCoreCLI@2
     displayName: 'Run Unit Tests'
+    continueOnError: false
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
@@ -72,6 +73,7 @@ steps:
 
   - task: DotNetCoreCLI@2
     displayName: 'Run Integration Tests'
+    continueOnError: false
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
