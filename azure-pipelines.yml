@@ -36,7 +36,7 @@ steps:
       scannerMode: 'dotnet'
       projectKey: $(SONAR_PROJECT_KEY)
       extraProperties: |
-        sonar.sources=$(Build.SourcesDirectory)/WebAppUI,$(Build.SourcesDirectory)/WebAppApi
+        sonar.sources=$(Build.SourcesDirectory)/WebAppUI,$(Build.SourcesDirectory)/WebApplicationApi
         sonar.tests=$(Build.SourcesDirectory)/Tests
         sonar.coverage.exclusions=**/obj/**,**/bin/**
         sonar.cs.xunit.reportsPaths=$(Build.SourcesDirectory)/test-results.trx
@@ -63,16 +63,6 @@ steps:
       mkdir -p $(Build.SourcesDirectory)/Coverage
       find $(Agent.TempDirectory) -name 'coverage.cobertura.xml' -exec cp {} $(Build.SourcesDirectory)/Coverage/ \;
     displayName: 'Locate and Move Coverage File'
-
-  - script: |
-      echo "Listing files in Coverage directory..."
-      ls -l $(Build.SourcesDirectory)/Coverage
-    displayName: 'Verify Coverage Directory Files'
-
-  - script: |
-       "Checking coverage.cobertura.xml contents..."
-        cat $(Build.SourcesDirectory)/Coverage/coverage.cobertura.xml
-    displayName: 'Debug Coverage File Contents'
 
   - task: PublishCodeCoverageResults@2
     displayName: 'Publish Code Coverage to Azure DevOps'
