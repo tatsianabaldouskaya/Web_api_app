@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: WebAppUI/Dockerfile 
-    image: bookshop123.azurecr.io/web_ui_app:latest
+    image: bookshop123.azurecr.io/web_ui_app:${TAG}
     ports:
       - "5256:8090"
     environment:
@@ -16,7 +16,7 @@ services:
     build:
       context: .
       dockerfile: WebApplicationApi/Dockerfile
-    image: bookshop123.azurecr.io/web_api_app:latest
+    image: bookshop123.azurecr.io/web_api_app:${TAG}
     ports:
       - "5062:8080"
     environment:
