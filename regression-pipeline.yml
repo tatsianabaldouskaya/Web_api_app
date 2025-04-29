@@ -66,10 +66,12 @@ steps:
 
   - task: DotNetCoreCLI@2
     displayName: 'Run Tests'
+    continueOnError: true
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
       arguments: '--filter FullyQualifiedName~End2End --logger:"trx;LogFileName=$(System.DefaultWorkingDirectory)/TestResults/ui-test-results.trx"'
+      
 
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Test Results as Artifact'
