@@ -17,6 +17,7 @@ variables:
   ACR_URL: '$(ACR_NAME).azurecr.io'
   PROJECT_NAME: 'web_app'
   AZURE_SUBSCRIPTION: 'Tatsiana_VS_personal_subscription(69e0488f-40aa-42cb-9421-d421d30469da)'
+  TAG: dev-$(Build.SourceVersion)
 
 steps:
   - task: UseDotNet@2
@@ -52,6 +53,7 @@ steps:
       azureContainerRegistry: '{"loginServer":"bookshop123.azurecr.io", "id" : "/subscriptions/69e0488f-40aa-42cb-9421-d421d30469da/resourceGroups/rg-web-app/providers/Microsoft.ContainerRegistry/registries/bookshop123"}'
       projectName: $(PROJECT_NAME)
       action: 'Run a Docker Compose command'
+      arguments: '--push -e TAG=$(TAG)'
       dockerComposeCommand: 'push'
 
   - task: DockerCompose@1
@@ -62,6 +64,7 @@ steps:
       azureContainerRegistry: $(ACR_NAME)
       projectName: $(PROJECT_NAME)
       action: 'Run a Docker Compose command'
+      arguments: '-e TAG=$(TAG)'
       dockerComposeCommand: 'up -d'
 
   - task: DotNetCoreCLI@2
@@ -88,4 +91,5 @@ steps:
       azureContainerRegistry: $(ACR_NAME)
       projectName: $(PROJECT_NAME)
       action: 'Run a Docker Compose command'
+      arguments: '-e TAG=$(TAG)'
       dockerComposeCommand: 'down'
