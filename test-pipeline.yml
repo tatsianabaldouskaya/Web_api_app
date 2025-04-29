@@ -51,7 +51,7 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=LogFileName=$(System.DefaultWorkingDirectory)/TestResults/unittest-results.trx"'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect:"XPlat Code Coverage" --logger:"trx;LogFileName=$(System.DefaultWorkingDirectory)/TestResults/unittest-results.trx"'
 
   - task: PublishCodeCoverageResults@2
     displayName: 'Publish Code Coverage Results'
