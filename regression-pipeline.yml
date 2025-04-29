@@ -43,6 +43,7 @@ steps:
       azureContainerRegistry: $(ACR_NAME)
       projectName: $(PROJECT_NAME)
       action: 'Run a Docker Compose command'
+      arguments: '-e TAG=$(TAG)'
       dockerComposeCommand: 'build'
 
   - task: DockerCompose@1
@@ -53,7 +54,7 @@ steps:
       azureContainerRegistry: '{"loginServer":"bookshop123.azurecr.io", "id" : "/subscriptions/69e0488f-40aa-42cb-9421-d421d30469da/resourceGroups/rg-web-app/providers/Microsoft.ContainerRegistry/registries/bookshop123"}'
       projectName: $(PROJECT_NAME)
       action: 'Run a Docker Compose command'
-      arguments: '--push -e TAG=$(TAG)'
+      arguments: '-e TAG=$(TAG)'
       dockerComposeCommand: 'push'
 
   - task: DockerCompose@1
