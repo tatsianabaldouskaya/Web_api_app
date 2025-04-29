@@ -36,6 +36,8 @@ steps:
       inlineScript: |
         az acr login --name $(ACR_NAME)
   - task: DockerCompose@1
+    env:
+      TAG: $(TAG) 
     inputs:
       containerregistrytype: 'Azure Container Registry'
       azureSubscription: $(AZURE_SUBSCRIPTION)
@@ -43,10 +45,11 @@ steps:
       azureContainerRegistry: $(ACR_NAME)
       projectName: $(PROJECT_NAME)
       action: 'Run a Docker Compose command'
-      arguments: '-e TAG=$(TAG)'
       dockerComposeCommand: 'build'
 
   - task: DockerCompose@1
+    env:
+      TAG: $(TAG) 
     inputs:
       containerregistrytype: 'Azure Container Registry'
       azureSubscription: $(AZURE_SUBSCRIPTION)
@@ -54,10 +57,11 @@ steps:
       azureContainerRegistry: '{"loginServer":"bookshop123.azurecr.io", "id" : "/subscriptions/69e0488f-40aa-42cb-9421-d421d30469da/resourceGroups/rg-web-app/providers/Microsoft.ContainerRegistry/registries/bookshop123"}'
       projectName: $(PROJECT_NAME)
       action: 'Run a Docker Compose command'
-      arguments: '-e TAG=$(TAG)'
       dockerComposeCommand: 'push'
 
   - task: DockerCompose@1
+    env:
+      TAG: $(TAG) 
     inputs:
       containerregistrytype: 'Azure Container Registry'
       azureSubscription: $(AZURE_SUBSCRIPTION)
@@ -65,7 +69,6 @@ steps:
       azureContainerRegistry: $(ACR_NAME)
       projectName: $(PROJECT_NAME)
       action: 'Run a Docker Compose command'
-      arguments: '-e TAG=$(TAG)'
       dockerComposeCommand: 'up -d'
 
   - task: DotNetCoreCLI@2
@@ -85,6 +88,8 @@ steps:
       publishLocation: 'pipeline'
 
   - task: DockerCompose@1
+    env:
+      TAG: $(TAG) 
     inputs:
       containerregistrytype: 'Azure Container Registry'
       azureSubscription: $(AZURE_SUBSCRIPTION)
@@ -92,5 +97,4 @@ steps:
       azureContainerRegistry: $(ACR_NAME)
       projectName: $(PROJECT_NAME)
       action: 'Run a Docker Compose command'
-      arguments: '-e TAG=$(TAG)'
       dockerComposeCommand: 'down'
