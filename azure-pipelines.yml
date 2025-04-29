@@ -11,7 +11,7 @@ variables:
   SONAR_HOST_URL: 'https://sonarcloud.io'
   SONAR_PROJECT_KEY: 'tatsianabaldouskaya_Web_api_app'
   SONAR_ORG_KEY: 'tatsianabaldouskaya-1'
-  COVERAGE_FOLDER: '$(System.DefaultWorkingDirectory)'
+  COVERAGE_FOLDER: '$(Agent.TempDirectory)'
   COVERAGE_FILE: '$(COVERAGE_FOLDER)/coverage.cobertura.xml'
 
 steps:
@@ -37,7 +37,7 @@ steps:
       projectKey: $(SONAR_PROJECT_KEY)
       extraProperties: |
         sonar.cs.xunit.reportsPaths=$(Build.SourcesDirectory)/test-results.trx
-        sonar.coverage.cobertura.reportPaths=$(Build.SourcesDirectory)/Cobertura.xml
+        sonar.coverage.cobertura.reportPaths=$(COVERAGE_FILE)
         sonar.scanner.scanAll=false
         sonar.branch.name=main
 
@@ -52,7 +52,7 @@ steps:
     inputs:
       command: 'test'
       projects: '**/Tests.csproj'
-      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect "Code Coverage" --logger:"trx;LogFileName=test-results.trx"'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect "Code Coverage" --logger:"trx;LogFileName=$(Build.SourcesDirectory)/test-results.trx"'
 
   - script: dotnet tool install -g dotnet-reportgenerator-globaltool
     displayName: 'Install ReportGenerator'
@@ -60,14 +60,14 @@ steps:
   - script: |
       reportgenerator \
         -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml \
-        -targetdir:$(Build.SourcesDirectory) \
+        -targetdir:$(Agent.TempDirectory) \
         -reporttypes:Cobertura
     displayName: 'Generate Cobertura Coverage Report'
 
   - task: PublishCodeCoverageResults@2
     displayName: 'Publish Code Coverage to Azure DevOps'
     inputs:
-      summaryFileLocation: '$(Build.SourcesDirectory)/Cobertura.xml'
+      summaryFileLocation: $(COVERAGE_FILE)
 
   - task: SonarCloudAnalyze@3
   - task: SonarCloudPublish@3
