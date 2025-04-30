@@ -79,12 +79,13 @@ steps:
       projects: '**/Tests.csproj'
       arguments: '--filter FullyQualifiedName~Tests.IntegrationTests --logger:"trx;LogFileName=$(System.DefaultWorkingDirectory)/TestResults/apitest-results.trx"'
   
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Test Results as Artifact'
+  - task: PublishTestResults@2
+    displayName: 'Publish Test-Results'
+    continueOnError: true
     inputs:
-      targetPath: '$(System.DefaultWorkingDirectory)/TestResults'
-      artifact: 'TestResults'
-      publishLocation: 'pipeline'
+      testResultsFormat: 'VSTest'
+      testResultsFiles: '$(System.DefaultWorkingDirectory)/TestResults/apitest-results.trx'
+      failTaskOnFailedTests: false
 
   - script: |
       dotnet tool install -g dotnet-reportgenerator-globaltool
