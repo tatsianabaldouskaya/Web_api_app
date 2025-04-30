@@ -39,7 +39,7 @@ steps:
         sonar.projectName=WebApp
         sonar.projectBaseDir=$(Build.SourcesDirectory)
         sonar.tests=$(Build.SourcesDirectory)/Tests
-        sonar.exclusions=$(Build.SourcesDirectory)/Tests/**,**/*.dll,**/*.exe,$(Build.SourcesDirectory)/Taf/**,$(Build.SourcesDirectory)/**/GlobalUsings.cs
+        sonar.exclusions=$(Build.SourcesDirectory)/Tests/**,**/*.dll,**/*.exe,$(Build.SourcesDirectory)/Taf/**,$(Build.SourcesDirectory)/Tests/GlobalUsings.cs
         sonar.coverage.exclusions=$(Build.SourcesDirectory)/Tests/**,**/bin/**/*,**/obj/**
         sonar.cs.xunit.reportsPaths=$(Build.SourcesDirectory)/test-results.trx
         sonar.coverage.cobertura.reportPaths=$(COVERAGE_FILE)
