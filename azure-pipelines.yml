@@ -43,7 +43,7 @@ steps:
         sonar.cs.xunit.reportsPaths=$(Build.SourcesDirectory)/test-results.trx
         sonar.coverage.cobertura.reportPaths=$(COVERAGE_FILE)
         sonar.coverage.exclusions=$(Build.SourcesDirectory)/Tests/**,**/bin/**/*,**/obj/**
-        sonar.exclusions=$(Build.SourcesDirectory)/WebApplicationApi/Config.cs,$(Build.SourcesDirectory)/Tests/**,**/*.csproj
+        sonar.exclusions=$(Build.SourcesDirectory)/WebApplicationApi/Config.cs,$(Build.SourcesDirectory)/WebAppUI/Config.cs,$(Build.SourcesDirectory)/Taf/Core/Config.cs$(Build.SourcesDirectory)/Tests/**,**/*.csproj
         sonar.scanner.scanAll=false
         sonar.branch.name=main
         sonar.verbose=true
