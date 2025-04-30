@@ -33,7 +33,7 @@ steps:
         sonar.cs.xunit.reportsPaths=$(COVERAGE_FOLDER)/test-results.trx
         sonar.coverage.cobertura.reportPaths=$(COVERAGE_FILE)
         sonar.scanner.scanAll=false
-     ##   sonar.branch.name=main
+        sonar.branch.name=main
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore Dependencies'
