@@ -38,7 +38,7 @@ steps:
       extraProperties: |
         sonar.projectName=WebApp
         sonar.projectBaseDir=$(Build.SourcesDirectory)
-        sonar.sources=$(Build.SourcesDirectory)/WebApplicationApi,$(Build.SourcesDirectory)/WebAppUi
+        sonar.sources=$(Build.SourcesDirectory)/WebAppUi,$(Build.SourcesDirectory)/WebApplicationApi
         sonar.tests=$(Build.SourcesDirectory)/Tests
         sonar.cs.xunit.reportsPaths=$(Build.SourcesDirectory)/test-results.trx
         sonar.coverage.cobertura.reportPaths=$(COVERAGE_FILE)
