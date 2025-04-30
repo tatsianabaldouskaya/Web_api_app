@@ -36,10 +36,13 @@ steps:
       scannerMode: 'dotnet'
       projectKey: $(SONAR_PROJECT_KEY)
       extraProperties: |
+        sonar.projectName=WebApp
+        sonar.projectBaseDir=$(Build.SourcesDirectory)
         sonar.sources=$(Build.SourcesDirectory)/WebApplicationApi,$(Build.SourcesDirectory)/WebAppUi
         sonar.tests=$(Build.SourcesDirectory)/Tests
         sonar.cs.xunit.reportsPaths=$(Build.SourcesDirectory)/test-results.trx
         sonar.coverage.cobertura.reportPaths=$(COVERAGE_FILE)
+        sonar.coverage.exclusions=$(Build.SourcesDirectory)/Tests/**,**/bin/**/*,**/obj/**
         sonar.scanner.scanAll=false
         sonar.branch.name=main
         sonar.verbose=true
