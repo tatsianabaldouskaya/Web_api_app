@@ -1,0 +1,42 @@
+services:
+  ui:
+    build:
+      context: .
+      dockerfile: WebAppUI/Dockerfile 
+    image: bookshop123.azurecr.io/web_ui_app:${TAG}
+    ports:
+      - "5256:8090"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8090
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: .
+      dockerfile: WebApplicationApi/Dockerfile
+    image: bookshop123.azurecr.io/web_api_app:${TAG}
+    ports:
+      - "5062:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__BookshopDatabase=Server=db;Database=BookshopDb;User=sa;Password=My_password123;TrustServerCertificate=True
+    depends_on:
+      - db
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=My_password123
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserverdata:/var/opt/mssql
+
+volumes:
+  sqlserverdata:

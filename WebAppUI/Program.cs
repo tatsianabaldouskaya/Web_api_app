@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient("ApiClient", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7203/");
+    client.BaseAddress = new Uri("http://api:8080/");
 });
 
 builder.Services.AddScoped<UserService>();

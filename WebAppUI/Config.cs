@@ -5,7 +5,7 @@ public class Config
     private static Lazy<IConfiguration> _configuration = new (() =>
     {
         return new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile("appsettings1.json", optional: false, reloadOnChange: true)
             .Build();
     });
 

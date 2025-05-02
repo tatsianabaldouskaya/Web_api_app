@@ -12,6 +12,6 @@ public static class Config
     });
 
     private static IConfiguration Configuration => _configuration.Value;
-    public static string DbConnectionString => Configuration.GetValue<string>("ConnectionStrings:BookshopDatabase");
+    public static string DbConnectionString => Configuration.GetValue<string>("ConnectionStrings:BookshopOut");
     public static string BaseUrl => Configuration.GetValue<string>("BaseUrl");
 }

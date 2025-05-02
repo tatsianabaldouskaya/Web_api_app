@@ -1,4 +1,6 @@
-﻿using OpenQA.Selenium;
+﻿using Microsoft.Extensions.Options;
+
+using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 
 namespace Taf.Core;
@@ -10,11 +12,13 @@ public class ChromeWebDriver
     public static IWebDriver InitializeDriver()
     {
         var chromeOptions = new ChromeOptions();
+        chromeOptions.AddArguments("--headless");
+        chromeOptions.AddArguments("--no-sandbox");
+        chromeOptions.AddArguments("--disable-dev-shm-usage");
 
         if (_driver == null)
         {
             _driver = new ChromeDriver(chromeOptions);
-
             _driver.Manage().Cookies.DeleteAllCookies();
             _driver.Navigate().Refresh();
             _driver.Navigate().GoToUrl(Config.BaseUrl);

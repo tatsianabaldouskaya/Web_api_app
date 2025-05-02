@@ -1,0 +1,86 @@
+trigger: 
+  branches:
+    include:
+      - main
+pr: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  SONAR_HOST_URL: 'https://sonarcloud.io'
+  SONAR_PROJECT_KEY: 'tatsianabaldouskaya_Web_api_app'
+  SONAR_ORG_KEY: 'tatsianabaldouskaya-1'
+  COVERAGE_FOLDER: '$(Build.SourcesDirectory)/Coverage'
+  COVERAGE_FILE: '$(COVERAGE_FOLDER)/coverage.cobertura.xml'
+
+steps:
+  - task: UseDotNet@2
+    displayName: 'Install SDK'
+    inputs:
+      version: '8.x'
+
+  - checkout: self
+    fetchDepth: 0 
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore Dependencies'
+    inputs:
+      command: 'restore'
+      projects: '**/*.sln'
+
+  - task: SonarCloudPrepare@3
+    inputs:
+      SonarQube: 'sonarToken1'
+      organization: 'tatsianabaldouskaya-1'
+      scannerMode: 'dotnet'
+      projectKey: $(SONAR_PROJECT_KEY)
+      extraProperties: |
+        sonar.cs.xunit.reportsPaths=$(Build.SourcesDirectory)/test-results.trx
+        sonar.coverage.cobertura.reportPaths=$(COVERAGE_FILE)
+        sonar.scanner.scanAll=false
+        sonar.branch.name=main
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Build the Project'
+    inputs:
+      command: 'build'
+      projects: '**/*.sln'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Run Unit Tests with code coverage'
+    continueOnError: false
+    inputs:
+      command: 'test'
+      projects: '**/Tests.csproj'
+      arguments: '--filter FullyQualifiedName~Tests.UnitTests --collect "XPlat Code Coverage" --logger:"trx;LogFileName=$(Build.SourcesDirectory)/test-results.trx"'
+
+  - script: |
+      echo "Finding and moving coverage file to Coverage directory..."
+      mkdir -p $(Build.SourcesDirectory)/Coverage
+      find $(Agent.TempDirectory) -name 'coverage.cobertura.xml' -exec cp {} $(Build.SourcesDirectory)/Coverage/ \;
+    displayName: 'Locate and Move Coverage File'
+
+  - task: PublishCodeCoverageResults@2
+    displayName: 'Publish Code Coverage to Azure DevOps'
+    inputs:
+      summaryFileLocation: '$(Build.SourcesDirectory)/Coverage/coverage.cobertura.xml'
+
+  - task: SonarCloudAnalyze@3
+  - task: SonarCloudPublish@3
+    inputs:
+      pollingTimeoutSec: '300'
+
+  - script: |
+      dotnet tool install -g dotnet-reportgenerator-globaltool
+      reportgenerator \
+        -reports:$(COVERAGE_FILE) \
+        -targetdir:$(Build.SourcesDirectory)/Coverage/Report \
+        -reporttypes:Html
+    displayName: 'Generate HTML Coverage Report'
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Coverage Report as Artifact'
+    inputs:
+      targetPath: '$(Build.SourcesDirectory)/Coverage/Report'
+      artifact: 'CoverageReport'

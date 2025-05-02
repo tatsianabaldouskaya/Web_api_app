@@ -1,0 +1,106 @@
+pr: none
+trigger: 
+  branches:
+    include:
+      - main
+
+schedules:
+  - cron: "0 8 * * *"
+    displayName: "Daily Schedule"
+    branches:
+      include:
+        - main
+    always: true
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  ACR_NAME: 'bookshop123'
+  ACR_URL: '$(ACR_NAME).azurecr.io'
+  PROJECT_NAME: 'web_app'
+  AZURE_SUBSCRIPTION: 'Tatsiana_VS_personal_subscription(69e0488f-40aa-42cb-9421-d421d30469da)'
+  TAG: dev-$(Build.SourceVersion)
+
+steps:
+  - task: UseDotNet@2
+    displayName: 'Install SDK'
+    inputs:
+      version: '8.x'
+
+  - checkout: self
+
+  - task: AzureCLI@2
+    displayName: Authenticate to Azure Container Registry
+    inputs:
+      azureSubscription: $(AZURE_SUBSCRIPTION)
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az acr login --name $(ACR_NAME)
+  - task: DockerCompose@1
+    env:
+      TAG: $(TAG) 
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscription: $(AZURE_SUBSCRIPTION)
+      dockerComposeFile: '**/docker-compose.yml'
+      azureContainerRegistry: $(ACR_NAME)
+      projectName: $(PROJECT_NAME)
+      action: 'Run a Docker Compose command'
+      dockerComposeCommand: 'build'
+
+  - task: DockerCompose@1
+    env:
+      TAG: $(TAG) 
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscription: $(AZURE_SUBSCRIPTION)
+      dockerComposeFile: '**/docker-compose.yml'
+      azureContainerRegistry: '{"loginServer":"bookshop123.azurecr.io", "id" : "/subscriptions/69e0488f-40aa-42cb-9421-d421d30469da/resourceGroups/rg-web-app/providers/Microsoft.ContainerRegistry/registries/bookshop123"}'
+      projectName: $(PROJECT_NAME)
+      action: 'Run a Docker Compose command'
+      dockerComposeCommand: 'push'
+
+  - task: DockerCompose@1
+    env:
+      TAG: $(TAG) 
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscription: $(AZURE_SUBSCRIPTION)
+      dockerComposeFile: '**/docker-compose.yml'
+      azureContainerRegistry: $(ACR_NAME)
+      projectName: $(PROJECT_NAME)
+      action: 'Run a Docker Compose command'
+      dockerComposeCommand: 'up -d'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Run Tests'
+    continueOnError: true
+    inputs:
+      command: 'test'
+      projects: '**/Tests.csproj'
+      arguments: '--filter FullyQualifiedName~End2End --logger:"trx;LogFileName=$(System.DefaultWorkingDirectory)/TestResults/ui-test-results.trx"'
+      
+
+  - task: PublishTestResults@2
+    displayName: 'Publish Test-Results'
+    continueOnError: true
+    inputs:
+      testResultsFormat: 'VSTest'
+      testResultsFiles: '$(System.DefaultWorkingDirectory)/TestResults/ui-test-results.trx'
+      failTaskOnFailedTests: false
+ 
+
+  - task: DockerCompose@1
+    env:
+      TAG: $(TAG) 
+    inputs:
+      containerregistrytype: 'Azure Container Registry'
+      azureSubscription: $(AZURE_SUBSCRIPTION)
+      dockerComposeFile: '**/docker-compose.yml'
+      azureContainerRegistry: $(ACR_NAME)
+      projectName: $(PROJECT_NAME)
+      action: 'Run a Docker Compose command'
+      dockerComposeCommand: 'down'
